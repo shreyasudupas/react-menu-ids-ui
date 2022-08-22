@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.App-Logo{
+  padding: 10px;
+}
+
+.App-login{
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+}
