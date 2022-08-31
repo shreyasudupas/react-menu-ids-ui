@@ -5,7 +5,7 @@ export interface UserAddressState {
     listUserAddress: Array<UserAddressModel>;
 }
 
-interface DropdownModel {
+export interface DropdownModel {
     label: string;
     value: number;
 }

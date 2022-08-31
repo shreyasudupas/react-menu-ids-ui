@@ -1,13 +1,15 @@
-import axios from "axios"
+import axios, { AxiosRequestConfig } from "axios"
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
 import { Checkbox } from "primereact/checkbox"
 import { Dropdown } from "primereact/dropdown"
-import React from "react"
+import React, { useRef } from "react"
 import { useEffect, useReducer } from "react"
 import { UserAddressAction, UserAddressState ,UserAddressModel } from "./UserAddressTypes"
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { useAddModifyUserAddress } from "../../graphQL/mutation/useAddModifyUserAddress"
+import { Toast } from "primereact/toast"
 
 const initialState : UserAddressState = {
     cities:[],
@@ -59,12 +61,15 @@ interface UserAddressProps{
 const UserAddress = ({getUserAddress,getActiveIndex}:UserAddressProps) => {
   //console.log('User Address called'+ userAddress )
     //const [checked, setChecked] = useState(false)
+    let storage = JSON.parse(sessionStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`)!);
     const [state, dispatch] = useReducer(reducer, initialState)
     //console.log(state.listUserAddress)
     let activeIndex = 0
     let newActive :boolean | null = null
     const GETCITIES_BYID = "https://localhost:5006/api/utility/getCityByStateId?StateId="
     const GETAREAS_BY_ID = "https://localhost:5006/api/utility/getAreaByCityId?CityId="
+    const [ modifyUserAddress ] = useAddModifyUserAddress();
+    const toast = useRef<any>(null);
 
     useEffect(()=>{
 
@@ -73,6 +78,14 @@ const UserAddress = ({getUserAddress,getActiveIndex}:UserAddressProps) => {
         }
     }
     ,[getUserAddress,getActiveIndex])
+
+    const showSuccess = () => {
+        toast.current.show({severity:'success', summary: 'Success Message', detail:'Saved User', life: 3000});
+    }
+
+    const showError  = () => {
+        toast.current.show({severity:'error', summary: 'Error Message', detail:'Error while saving user', life: 3000});
+    }
 
     const addNewUserAddress = () =>{
         newActive = true
@@ -102,7 +115,7 @@ const UserAddress = ({getUserAddress,getActiveIndex}:UserAddressProps) => {
         dispatch({type:'modify-user-address-form', field:event.target.name, value:event.target.value ,userId: userId })
 
         let url = GETCITIES_BYID + event.target.value
-        axios.get(url)
+        axios.get(url,{ headers: { "Authorization" : `Bearer ${storage["access_token"]}` } })
         .then((result)=>{
             let response = result.data
             
@@ -125,7 +138,31 @@ const UserAddress = ({getUserAddress,getActiveIndex}:UserAddressProps) => {
     }
 
     const saveUserAddress = (user:UserAddressModel) => {
-        console.log(user)
+        //console.log(user)
+        modifyUserAddress({
+            variables:{
+                saveAddress:{
+                    id:user.id,
+                    fullAddress:user.fullAddress,
+                    state:user.state,
+                    stateId:user.stateId,
+                    city:user.city,
+                    cityId:user.cityId,
+                    myCities:user.myCities,
+                    area:user.area,
+                    areaId:user.areaId,
+                    isActive: user.isActive,
+                    myAreas:user.myAreas,
+                    myStates:user.myStates
+                }
+            }
+        }).then((res)=>{
+            //console.log(res);
+            showSuccess();
+        }).catch((error)=>{
+            //console.log(error)
+            showError();
+        })
     }
 
     const footer = <Button label="Add" icon="pi pi-plus" style={{marginRight: '.25em'}} onClick={()=> addNewUserAddress()}/>
@@ -136,6 +173,7 @@ const UserAddress = ({getUserAddress,getActiveIndex}:UserAddressProps) => {
     else
         return (
             <React.Fragment>
+                <Toast ref={toast} />
                 <Card title="Address" footer={footer}>
                     <div className='grid'>
                         <div className='col-12'>
