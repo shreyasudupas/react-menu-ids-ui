@@ -56,7 +56,7 @@ const ProtectedLayout = () => {
                 {
                     label: 'List',
                     icon: 'pi pi-fw pi-list',
-                    command: () => { navigate('user/lists') }
+                    command: () => { navigate('user/list') }
 
                 }
             ]

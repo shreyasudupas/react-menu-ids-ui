@@ -6,7 +6,6 @@ import { AuthProvider } from '../context/useAuth';
 import ProtectedLayout from './layouts/ProtectedLayout';
 import UserLayout from './layouts/UserLayout';
 import UserProfileOverview from '../pages/UserProfile/UserProfileOverview';
-// import { ListUser } from '../pages/user/ListUser';
 // import PageNotFound from '../pages/PageNotFound';
 import Home from '../pages/Home';
 import HomeLayout from './layouts/HomeLayout';
@@ -17,6 +16,7 @@ import Error from '../pages/Error';
 import LoginCallback from './LoginCallback';
 import LogoutCallback from './LogoutCallback';
 import AccessDeniedLayout from './layouts/AccessDeniedLayout';
+import { UserList } from '../pages/UserList/UserList';
 
 function App() {
   
@@ -57,7 +57,8 @@ function App() {
             <Route element={<ProtectedLayout />}>
                <Route path='user' element={<UserLayout />} >
                   <Route index element={<UserProfileOverview />} />
-                  <Route path='me' element={<UserProfileOverview />} />
+                  <Route path=':userId' element={<UserProfileOverview />} />
+                  <Route path='list' element={ <UserList/> }/>
                </Route>
             </Route>
 
