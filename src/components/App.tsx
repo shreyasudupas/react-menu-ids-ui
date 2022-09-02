@@ -17,6 +17,7 @@ import LoginCallback from './LoginCallback';
 import LogoutCallback from './LogoutCallback';
 import AccessDeniedLayout from './layouts/AccessDeniedLayout';
 import { UserList } from '../pages/UserList/UserList';
+import { ApiScopes } from '../pages/ApiScopes/ApiScopes';
 
 function App() {
   
@@ -59,6 +60,9 @@ function App() {
                   <Route index element={<UserProfileOverview />} />
                   <Route path=':userId' element={<UserProfileOverview />} />
                   <Route path='list' element={ <UserList/> }/>
+               </Route>
+               <Route path='operation'>
+                  <Route path='apiscope' element={ <ApiScopes/> }/>
                </Route>
             </Route>
 

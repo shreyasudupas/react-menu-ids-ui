@@ -13,6 +13,7 @@ import ImageUpload from '../../components/ImageUpload';
 import UserClaim from '../../components/user/UserClaim';
 import { Toast } from 'primereact/toast';
 import UserAddress from '../../components/user/UserAddress';
+import { useParams } from 'react-router-dom';
 
 const initialState : State = {
     userId: null,
@@ -52,6 +53,8 @@ const UserProfileOverview = () => {
     const getUserContext = useAuth()
     let user = null;
     const toast = useRef<any>(null);
+    const { userId } = useParams();
+    //console.log("userId from seacrch params"+ userId);
    
     const { loading, error, data } = useUserInformationQuery(state.userId!);
     const [saveUserInfo] = useSaveUserInformationMutation();
@@ -72,7 +75,11 @@ const UserProfileOverview = () => {
             user = await getUserContext.getUser()
 
             if (user !== null) {
-                dispatch({ type: 'UPDATE-USERID', Id: user["profile"].userId })
+                if(userId === undefined){
+                    dispatch({ type: 'UPDATE-USERID', Id: user["profile"].userId })
+                }else{
+                    dispatch({ type: 'UPDATE-USERID', Id: userId??'' })
+                }
             }
         }
 

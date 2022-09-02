@@ -16,8 +16,9 @@ const ProtectedLayout = () => {
             icon: 'pi pi-fw pi-pencil',
             items: [
                 {
-                    label: 'Left',
-                    icon: 'pi pi-fw pi-align-left'
+                    label: 'API Scopes',
+                    icon: 'pi pi-fw pi-align-left',
+                    command: () => { navigate('operation/apiscope') }
                 },
                 {
                     label: 'Right',
