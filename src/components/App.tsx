@@ -18,6 +18,9 @@ import LogoutCallback from './LogoutCallback';
 import AccessDeniedLayout from './layouts/AccessDeniedLayout';
 import { UserList } from '../pages/UserList/UserList';
 import { ApiScopes } from '../pages/ApiScopes/ApiScopes';
+import { ManageApiScope } from '../pages/ManageApiScope/ManageApiScope';
+import { UserRoleList } from '../pages/RoleList/RoleList';
+import { UserRole } from '../pages/ManageRole/ManageRole';
 
 function App() {
   
@@ -63,6 +66,9 @@ function App() {
                </Route>
                <Route path='operation'>
                   <Route path='apiscope' element={ <ApiScopes/> }/>
+                  <Route path='manageApiScope/:apiScopeId' element={ <ManageApiScope/> }/>
+                  <Route path='userRoleList' element={ <UserRoleList/> }/>
+                  <Route path='manageRole/:roleId' element={ <UserRole/> }/>
                </Route>
             </Route>
 

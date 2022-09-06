@@ -1,5 +1,5 @@
 export interface IUserList{
-    userId:string;
+    id:string;
     username:string;
     isAdmin:boolean;
     email:string;

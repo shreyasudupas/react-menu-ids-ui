@@ -1,6 +1,6 @@
 import { InputText } from 'primereact/inputtext'
 import { Menubar } from 'primereact/menubar'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/useAuth'
 import '../App.css'
@@ -21,8 +21,9 @@ const ProtectedLayout = () => {
                     command: () => { navigate('operation/apiscope') }
                 },
                 {
-                    label: 'Right',
-                    icon: 'pi pi-fw pi-align-right'
+                    label: 'User Roles',
+                    icon: 'pi pi-fw pi-align-right',
+                    command: () => { navigate('operation/userRoleList') }
                 },
                 {
                     label: 'Center',
@@ -42,7 +43,7 @@ const ProtectedLayout = () => {
                 {
                     label: 'Dashboard',
                     icon: 'pi pi-fw pi-id-card',
-                    command: () => { navigate('user/me') }
+                    command: () => { navigate('user') }
                 },
                 {
                     label: 'New',
