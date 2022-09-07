@@ -2,9 +2,12 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import { ApiScopeData } from './ApiScopeType';
 
 export const ApiScopes = () => {
+
+    const navigate = useNavigate();
 
     const apiScopes:ApiScopeData[] = [
         {id:1,name:'inventoryApi',displayName:'Menu Inventory',description:''},
@@ -20,7 +23,15 @@ export const ApiScopes = () => {
     );
 
     const editBodyTemplate = (rowdata:ApiScopeData) => {
-        return  <Button icon="pi pi-user-edit" className="p-button-rounded p-button-primary" aria-label="Bookmark" />
+        return  <Button icon="pi pi-user-edit"
+         className="p-button-rounded p-button-primary" 
+         aria-label="Bookmark" 
+         onClick={(e)=> { callManageApiScope(rowdata.id) }}/>
+    }
+
+    const callManageApiScope = (apiScopeId:number) => {
+        let url:string = '/operation/manageApiScope/' + apiScopeId;
+        navigate(url)
     }
     
   return (

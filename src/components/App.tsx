@@ -67,7 +67,7 @@ function App() {
                <Route path='operation'>
                   <Route path='apiscope' element={ <ApiScopes/> }/>
                   <Route path='manageApiScope/:apiScopeId' element={ <ManageApiScope/> }/>
-                  <Route path='userRoleList' element={ <UserRoleList/> }/>
+                  <Route path='roleList' element={ <UserRoleList/> }/>
                   <Route path='manageRole/:roleId' element={ <UserRole/> }/>
                </Route>
             </Route>
