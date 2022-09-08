@@ -53,6 +53,7 @@ export const UserRole = () => {
         <span>
             <Button label="Save" icon="pi pi-check" />
             <Button label="Cancel" icon="pi pi-times" className="p-button-secondary ml-2" onClick={ ()=> Back() }/>
+            <Button label="Delete" icon="pi pi-trash" className="p-button-danger ml-2" />
         </span>
     );
 
