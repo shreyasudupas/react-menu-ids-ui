@@ -5,7 +5,7 @@ interface GetRolesResponse{
     roles:Role[];
 }
 
-const GET_ROLES = gql`
+export const GET_ROLES = gql`
 query GetRoles{
     roles {
       roleId

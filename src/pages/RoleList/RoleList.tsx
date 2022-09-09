@@ -27,7 +27,6 @@ export const UserRoleList = () => {
         return (
             <React.Fragment>
                 <Button label="New" icon="pi pi-plus" className="p-button-success mr-2" onClick={()=> callManageRole('0')}/>
-                
             </React.Fragment>
         )
     }
