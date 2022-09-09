@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client"
 import { Role } from "../../pages/RoleList/RoleType";
 
-interface GetRolesResponse{
+export interface GetRolesResponse{
     roles:Role[];
 }
 

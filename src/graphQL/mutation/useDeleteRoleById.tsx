@@ -1,8 +1,9 @@
 import { gql, useMutation } from '@apollo/client'
-import { GET_ROLES } from '../query/useGetRoles';
+import { Role } from '../../pages/RoleList/RoleType';
+import { GetRolesResponse, GET_ROLES } from '../query/useGetRoles';
 
 interface DeleteRoleByIdRepsonse{
-    result:boolean;
+    deleteRole:Role;
 }
 
 interface DeleteRoleByIdVariable{
@@ -11,7 +12,9 @@ interface DeleteRoleByIdVariable{
 
 const DELETEROLEBYID = gql`
 mutation DeleteRole($roleId:String!){
-    deleteRole(roleId:$roleId)
+    deleteRole(roleId:$roleId){
+        roleId
+    }
   }
 `
 
@@ -20,9 +23,20 @@ export const useDeleteRoleById = (roleId:string) => {
     variables:{
         roleId: roleId
     },
-    refetchQueries:[
-        { query: GET_ROLES },
-        'GetRoles'
-    ]
+   update(cache,{ data }) {
+    const { roles } = cache.readQuery<GetRolesResponse>({
+        query: GET_ROLES
+    })!;
+
+    //console.log(roles.filter(role => role.roleId !== data?.deleteRole.roleId));
+
+    cache.writeQuery({
+        query: GET_ROLES,
+        data: {
+            roles: roles.filter(role =>
+                role.roleId !== data?.deleteRole.roleId)
+        }
+    });
+   }
   });
 }

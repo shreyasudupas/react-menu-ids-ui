@@ -95,19 +95,19 @@ export const UserRole = () => {
     }
 
     const DeleteRoleById = (roleId:string | undefined) => {
-        if(roleId !== undefined && roleId !== "0"){
-            deleteRoleById({ 
-                variables:{
-                    roleId: roleId
-                }
-            }).then((res)=>{
-                if(res){
-                    navigate(RolesUrl)
-                }else{
-                    showError("Error Deleting Role");
-                }
-            }).catch(err=>console.log(err))
-        }
+        // if(roleId !== undefined && roleId !== "0"){
+        //     deleteRoleById({ 
+        //         variables:{
+        //             roleId: roleId
+        //         }
+        //     }).then((res)=>{
+        //         if(res.data?.result.roleId === roleId){
+        //             navigate(RolesUrl)
+        //         }else{
+        //             showError("Error Deleting Role");
+        //         }
+        //     }).catch(err=>console.log(err))
+        // }
     }
 
     const handleInput = (event:any) => {

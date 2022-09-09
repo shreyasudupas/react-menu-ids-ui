@@ -1,6 +1,6 @@
 import { gql, useMutation } from '@apollo/client'
 import { Role } from '../../pages/RoleList/RoleType';
-import { GET_ROLES } from '../query/useGetRoles';
+import { GetRolesResponse, GET_ROLES } from '../query/useGetRoles';
 
 interface AddRoleResponse{
     addRole:Role;
@@ -17,14 +17,27 @@ const ADD_ROLE = gql`
 mutation AddRole($newRole:RoleListResponseInput){
     addRole(newRole:$newRole) {
       roleId
+      roleName
     }
   }
 `
 
 export const useAddRole = () => {
   return useMutation<AddRoleResponse,AddRoleVariable>(ADD_ROLE,{
-    refetchQueries:[
-        {query: GET_ROLES}
-    ]
+    update(cache,{ data }) {
+        const { roles } = cache.readQuery<GetRolesResponse>({
+            query: GET_ROLES
+        })!;
+    
+        cache.writeQuery({
+            query: GET_ROLES,
+            data: {
+                roles: [
+                    ...roles,
+                    data?.addRole
+                ]
+            }
+        });
+       }
   });
 }
