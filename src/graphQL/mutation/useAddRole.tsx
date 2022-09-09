@@ -38,6 +38,7 @@ export const useAddRole = () => {
                 ]
             }
         });
+        //console.log(cache.readQuery<GetRolesResponse>({query: GET_ROLES})!);
        }
   });
 }

@@ -26,6 +26,9 @@ export const UserRoleList = () => {
             if(data !== undefined){
                 setRoles(data.roles);
             }
+        }else{
+            if(data !== undefined)
+                setRoles(data?.roles)
         }
     },[data])
     
@@ -47,7 +50,6 @@ export const UserRoleList = () => {
             }).then((res)=>{
                 var result = res.data?.deleteRole;
 
-                debugger
                 if(result?.roleId !== roleId){
                     showError("Error Deleting Role");
                 }
@@ -60,12 +62,12 @@ export const UserRoleList = () => {
         return  (
             <div>
                 <Button icon="pi pi-user-edit"
-                    className="p-button-rounded p-button-primary"
+                    className="p-button-rounded p-button-primary p-2"
                     aria-label="Bookmark"
                     onClick={(e) => { callManageRole(rowdata.roleId) }}
                 />
                 <Button icon="pi pi-user-minus"
-                    className="p-button-rounded p-button-danger"
+                    className="p-button-rounded p-button-danger p-2"
                     aria-label="Bookmark"
                     onClick={(e) => { DeleteRoleById(rowdata.roleId) }}
                 />

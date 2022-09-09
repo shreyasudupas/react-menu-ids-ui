@@ -1,11 +1,9 @@
-import { debug } from 'console';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
-import React, { useEffect, useReducer, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAddRole } from '../../graphQL/mutation/useAddRole';
-import { useDeleteRoleById } from '../../graphQL/mutation/useDeleteRoleById';
 import { useGetRoleById } from '../../graphQL/query/useGetRoleById';
 import { ManageRoleAction, ManageRoleState } from './ManageRoleType';
 
@@ -41,7 +39,6 @@ export const UserRole = () => {
     const [state,dispatch] = useReducer(reducer,initialState);
     let { roleId } = useParams();
     const { data } = useGetRoleById((roleId !== undefined)?roleId:"")
-    const [ deleteRoleById ] = useDeleteRoleById((roleId !== undefined)?roleId:"");
     const [ addNewRole ] = useAddRole();
     const toast = useRef<any>(null);
     const RolesUrl:string = "/operation/roleList";
@@ -69,7 +66,6 @@ export const UserRole = () => {
         <span>
             {(roleId === "0") ? <Button label="Add" icon="pi pi-plus" onClick = {()=> AddNewRole()} /> : <Button label="Save" icon="pi pi-check" />}
             <Button label="Cancel" icon="pi pi-times" className="p-button-secondary ml-2" onClick={() => Back()} />
-            <Button label="Delete" icon="pi pi-trash" className="p-button-danger ml-2" onClick={() => DeleteRoleById(roleId)} />
         </span>
     );
 
@@ -94,22 +90,7 @@ export const UserRole = () => {
         return navigate(RolesUrl);
     }
 
-    const DeleteRoleById = (roleId:string | undefined) => {
-        // if(roleId !== undefined && roleId !== "0"){
-        //     deleteRoleById({ 
-        //         variables:{
-        //             roleId: roleId
-        //         }
-        //     }).then((res)=>{
-        //         if(res.data?.result.roleId === roleId){
-        //             navigate(RolesUrl)
-        //         }else{
-        //             showError("Error Deleting Role");
-        //         }
-        //     }).catch(err=>console.log(err))
-        // }
-    }
-
+    
     const handleInput = (event:any) => {
         dispatch({ type:'MODIFY_ROLE',value: event.target.value })
     }

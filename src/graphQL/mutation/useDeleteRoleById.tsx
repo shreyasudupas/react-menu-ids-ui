@@ -37,6 +37,8 @@ export const useDeleteRoleById = (roleId:string) => {
                 role.roleId !== data?.deleteRole.roleId)
         }
     });
+
+    //console.log(cache.readQuery<GetRolesResponse>({query: GET_ROLES})!);
    }
   });
 }
