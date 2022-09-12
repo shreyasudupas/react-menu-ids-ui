@@ -4,6 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useReducer, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAddRole } from '../../graphQL/mutation/useAddRole';
+import { useSaveRole } from '../../graphQL/mutation/useSaveRole';
 import { useGetRoleById } from '../../graphQL/query/useGetRoleById';
 import { ManageRoleAction, ManageRoleState } from './ManageRoleType';
 
@@ -40,6 +41,7 @@ export const UserRole = () => {
     let { roleId } = useParams();
     const { data } = useGetRoleById((roleId !== undefined)?roleId:"")
     const [ addNewRole ] = useAddRole();
+    const [ saveRole ] =  useSaveRole(state.role);
     const toast = useRef<any>(null);
     const RolesUrl:string = "/operation/roleList";
 
@@ -47,6 +49,10 @@ export const UserRole = () => {
 
     const showError = (message:string) => {
         toast.current.show({severity:'error', summary: 'Error Message', detail:message, life: 3000});
+    }
+
+    const showSuccess = (message:string) => {
+        toast.current.show({severity:'success', summary: 'Success Message', detail:message, life: 3000});
     }
 
     useEffect(() => {
@@ -64,7 +70,7 @@ export const UserRole = () => {
 
     const footer = (
         <span>
-            {(roleId === "0") ? <Button label="Add" icon="pi pi-plus" onClick = {()=> AddNewRole()} /> : <Button label="Save" icon="pi pi-check" />}
+            {(roleId === "0") ? <Button label="Add" icon="pi pi-plus" onClick = {()=> AddNewRole()} /> : <Button label="Save" icon="pi pi-check" onClick={(e)=> SaveRole()}/>}
             <Button label="Cancel" icon="pi pi-times" className="p-button-secondary ml-2" onClick={() => Back()} />
         </span>
     );
@@ -83,6 +89,22 @@ export const UserRole = () => {
             else{
                 showError("Error Adding Role");
             }
+        })
+    }
+
+    const SaveRole = () => {
+        saveRole({
+            variables:{
+                roleId:state.role.roleId,
+                roleName:state.role.roleName
+            }
+        }).then((res) => {
+            if(res.data?.saveRole !== null){
+                showSuccess("Role Saved");
+            }
+        }).catch((err)=> {
+            console.log(err);
+            showError("Error in Saving Role");
         })
     }
 
