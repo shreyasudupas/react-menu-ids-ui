@@ -66,14 +66,22 @@ export const UserRoleList = () => {
                     aria-label="Bookmark"
                     onClick={(e) => { callManageRole(rowdata.roleId) }}
                 />
+            </div>
+        
+    )}
+
+    const deleteBodyTemplate = (rowdata: Role) => {
+        return (
+            <>
                 <Button icon="pi pi-user-minus"
                     className="p-button-rounded p-button-danger p-2"
                     aria-label="Bookmark"
                     onClick={(e) => { DeleteRoleById(rowdata.roleId) }}
                 />
-            </div>
-        
-    )}
+            </>
+        )
+
+    }
 
     const callManageRole = (roleId:string) => {
         let url:string = '/operation/manageRole/' + roleId;
@@ -88,6 +96,7 @@ export const UserRoleList = () => {
               <DataTable value={roles} responsiveLayout="scroll">
                   <Column field="roleName"  header="Roles"></Column>
                   <Column header="Edit" body={editBodyTemplate}></Column>
+                  <Column header="Delete" body={deleteBodyTemplate}></Column>
               </DataTable>
         </Card>
     </React.Fragment>
