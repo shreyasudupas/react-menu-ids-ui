@@ -26,8 +26,9 @@ const ProtectedLayout = () => {
                     command: () => { navigate('operation/roleList') }
                 },
                 {
-                    label: 'Center',
-                    icon: 'pi pi-fw pi-align-center'
+                    label: 'Clients List',
+                    icon: 'pi pi-fw pi-align-center',
+                    command: () => { navigate('operation/clients') }
                 },
                 {
                     label: 'Justify',

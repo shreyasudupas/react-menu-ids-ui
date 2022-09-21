@@ -21,6 +21,8 @@ import { ApiScopes } from '../pages/ApiScopes/ApiScopes';
 import { ManageApiScope } from '../pages/ManageApiScope/ManageApiScope';
 import { UserRoleList } from '../pages/RoleList/RoleList';
 import { UserRole } from '../pages/ManageRole/ManageRole';
+import { ClientDisplay } from '../pages/ClientDisplayList/ClientDisplay';
+import { ManageClient } from '../pages/ManageClient/ManageClient';
 
 function App() {
   
@@ -69,6 +71,8 @@ function App() {
                   <Route path='manageApiScope/:apiScopeId' element={ <ManageApiScope/> }/>
                   <Route path='roleList' element={ <UserRoleList/> }/>
                   <Route path='manageRole/:roleId' element={ <UserRole/> }/>
+                  <Route path='clients' element={ <ClientDisplay/> } />
+                  <Route path='client/:clientId' element={ <ManageClient/> }/>
                </Route>
             </Route>
 
