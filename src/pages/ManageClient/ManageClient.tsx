@@ -7,6 +7,8 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
+import { ClientRedirectUrlComponent } from '../../components/ClientInformation/ClientRedirectUrlComponent';
+import { ClientSecretComponent } from '../../components/ClientInformation/ClientSecretComponent';
 import { useGetClientById } from '../../graphQL/query/useGetClientById';
 import { Client } from '../ClientDisplayList/ClientDisplayTypes';
 import { ManageClientAction, ManageClientState } from './ManageClientType';
@@ -61,22 +63,6 @@ export const ManageClient = () => {
 
     },[data,clientId])
 
-    const deleteSecretTemplate = (rowData:Client) => {
-        return <Button
-            icon="pi pi-user-edit"
-            className="p-button-rounded p-button-danger"
-            aria-label="Bookmark"
-      />
-    }
-
-    const deleteRedirectUrlTemplate = (rowData:Client) => {
-        return <Button
-            icon="pi pi-user-edit"
-            className="p-button-rounded p-button-danger"
-            aria-label="Bookmark"
-      />
-    }
-
     return (
         <React.Fragment>
             <div className='p-3'>
@@ -130,19 +116,11 @@ export const ManageClient = () => {
             </Card>
             </div>
             <div className='p-3'>
-                
+                <ClientSecretComponent key={state.clientId} clientSecret={state.client.clientSecrets}/>
             </div>
 
             <div className='p-3'>
-                <Card title="Redirect Uri List">
-                    <DataTable value={state.client.redirectUris} responsiveLayout="scroll">
-                        <Column field='redirectUri' header="Redirect Url"/>
-                        <Column header="Delete" body={deleteRedirectUrlTemplate}/>
-                    </DataTable>
-                    <div className='col-12 p-2'>
-                        <Button label='Add Redirect Url' className='p-button-rounded'/>
-                    </div>
-                </Card>
+                <ClientRedirectUrlComponent key={state.clientId} redirectUrls={state.client.redirectUris}/>
             </div>
             
         </React.Fragment>
