@@ -7,6 +7,9 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
+import { ClientAllowedCorsOrigin } from '../../components/ClientInformation/ClientAllowedCorsOrigin';
+import { ClientAllowedScopes } from '../../components/ClientInformation/ClientAllowedScopes';
+import { ClientPostLogoutRedirectUrl } from '../../components/ClientInformation/ClientPostLogoutRedirectUrl';
 import { ClientRedirectUrlComponent } from '../../components/ClientInformation/ClientRedirectUrlComponent';
 import { ClientSecretComponent } from '../../components/ClientInformation/ClientSecretComponent';
 import { useGetClientById } from '../../graphQL/query/useGetClientById';
@@ -18,7 +21,7 @@ const initialState:ManageClientState = {
     clientId:0,
     client: {
         id:0,clientId:'',clientName:'',description:'',createdDate:new Date(),enabled:false,requireConsent:false,requirePkce:false,
-        allowedScope:[],allowedGrantType:[],clientSecrets:[],allowedCorsOrigin:[],accessTokenLifetime:0,redirectUris:[],postLogoutRedirectUris:[]
+        allowedScopes:[],allowedGrantType:[],clientSecrets:[],allowedCorsOrigins:[],accessTokenLifetime:0,redirectUris:[],postLogoutRedirectUris:[]
     }
 }
 
@@ -116,12 +119,23 @@ export const ManageClient = () => {
             </Card>
             </div>
             <div className='p-3'>
+                <ClientAllowedScopes clientId={state.clientId} scopeList={state.client.allowedScopes}/>
+            </div>
+            <div className='p-3'>
                 <ClientSecretComponent key={state.clientId} clientSecret={state.client.clientSecrets}/>
+            </div>
+
+            <div className='p-3'>
+                <ClientAllowedCorsOrigin allowedCorsOrigins={state.client.allowedCorsOrigins}/>
             </div>
 
             <div className='p-3'>
                 <ClientRedirectUrlComponent key={state.clientId} redirectUrls={state.client.redirectUris}/>
             </div>
+            <div className='p-3'>
+                <ClientPostLogoutRedirectUrl postLogoutRedirectUrl={state.client.postLogoutRedirectUris}/>
+            </div>
+            
             
         </React.Fragment>
     )

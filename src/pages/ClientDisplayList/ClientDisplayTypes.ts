@@ -9,9 +9,9 @@ export interface Client{
     accessTokenLifetime:number;
     requireConsent:boolean;
     requirePkce:boolean;
-    allowedScope:AllowedScope[];
+    allowedScopes:AllowedScope[];
     clientSecrets:ClientSecret[];
-    allowedCorsOrigin:AllowedCorsOrigin[];
+    allowedCorsOrigins:AllowedCorsOrigin[];
     redirectUris:RedirectUrl[];
     postLogoutRedirectUris:PostLogoutRedirectUri[];
 }
@@ -29,7 +29,7 @@ export interface ClientSecret{
 
 export interface AllowedCorsOrigin{
     id:number;
-    clientId:number;
+    //clientId:number;
     url:string;
 }
 
