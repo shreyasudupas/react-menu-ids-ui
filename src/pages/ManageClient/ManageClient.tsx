@@ -9,6 +9,7 @@ import React, { useEffect, useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { ClientAllowedCorsOrigin } from '../../components/ClientInformation/ClientAllowedCorsOrigin';
 import { ClientAllowedScopes } from '../../components/ClientInformation/ClientAllowedScopes';
+import { ClientGrantType } from '../../components/ClientInformation/ClientGrantType';
 import { ClientPostLogoutRedirectUrl } from '../../components/ClientInformation/ClientPostLogoutRedirectUrl';
 import { ClientRedirectUrlComponent } from '../../components/ClientInformation/ClientRedirectUrlComponent';
 import { ClientSecretComponent } from '../../components/ClientInformation/ClientSecretComponent';
@@ -120,6 +121,9 @@ export const ManageClient = () => {
             </div>
             <div className='p-3'>
                 <ClientAllowedScopes clientId={state.clientId} scopeList={state.client.allowedScopes}/>
+            </div>
+            <div className='p-3'>
+                <ClientGrantType clientId={state.clientId} grantValue={state.client.allowedGrantType}/>
             </div>
             <div className='p-3'>
                 <ClientSecretComponent key={state.clientId} clientSecret={state.client.clientSecrets}/>

@@ -58,10 +58,14 @@ export const ClientAllowedScopes = ({ scopeList , clientId }:AllowedScopeType) =
       }).catch(err => console.log(err));
 
     }
+
+    const footerTemplate = () => {
+      return <Button label='Save Scopes' className='p-button-rounded' onClick={()=> saveScopes()}/>
+    }
     
   return (
     <React.Fragment>
-      <Card title="Allowed Scopes">
+      <Card title="Allowed Scopes" footer={footerTemplate}>
         <div className='formgrid grid p-fluid'>
           <div className='field col-6 p-3'>
             <MultiSelect value={selectedScopes}
@@ -71,9 +75,6 @@ export const ClientAllowedScopes = ({ scopeList , clientId }:AllowedScopeType) =
               optionValue="value"
               placeholder="Select Scope Types"
               display="chip" />
-          </div>
-          <div className='col-4 p-3'>
-            <Button label='Save Scopes' className='p-button-rounded' onClick={()=> saveScopes()}/>
           </div>
         </div>
       </Card>
