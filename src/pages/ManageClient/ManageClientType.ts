@@ -11,3 +11,15 @@ export type ManageClientAction =
 | { type:'ADD_CLIENT'; newclient:Client; }
 //| { type:'MODIFY_CLIENT'; client:Client; }
 | { type:'MODIFY_CLIENTID'; id:number; }
+
+export interface ClientInformationModel{
+    id:number;
+    clientId:string;
+    clientName:string;
+    description:string;
+    enabled:boolean;
+    createdDate:Date;
+    accessTokenLifetime:number;
+    requireConsent:boolean;
+    requirePkce:boolean;
+}
