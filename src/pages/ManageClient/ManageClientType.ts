@@ -18,7 +18,7 @@ export interface ClientInformationModel{
     clientName:string;
     description:string;
     enabled:boolean;
-    createdDate:Date;
+    createdDate:string;
     accessTokenLifetime:number;
     requireConsent:boolean;
     requirePkce:boolean;

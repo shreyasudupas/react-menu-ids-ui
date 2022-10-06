@@ -13,7 +13,7 @@ type AllowedScopeType = {
 }
 
 const GETALLOWEDSCOPELIST:string = "https://localhost:5006/api/utility/getAllowedScopes";
-let storage = JSON.parse(sessionStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`)!);
+
 
 const initialState: ClientAllowedScopeState = {
   allowedScopeList : [],
@@ -44,9 +44,8 @@ const reducer = (state:ClientAllowedScopeState,action:ClientAllowedScopeActon):C
 export const ClientAllowedScopes = ({ scopeList , clientId }:AllowedScopeType) => {
 
     const [state,dispatch] = useReducer(reducer,initialState);
-    
     const [ saveClientAllowedScope ] = useSaveClientAllowedScopeById();
-
+    let storage = JSON.parse(sessionStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`)!);
     
     
     useEffect(()=>{

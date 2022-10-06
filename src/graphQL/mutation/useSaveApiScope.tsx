@@ -30,6 +30,7 @@ export const useSaveApiScope = () => {
   return useMutation<SaveApiScopeResponse, SaveApiScopeVariable>(SAVE_APISCOPE,
     {
       update(cache, { data }) {
+        debugger
         const { apiScopes } = cache.readQuery<ApiScopesResponse>({
           query: GET_ALL_APISCOPES
         })!;

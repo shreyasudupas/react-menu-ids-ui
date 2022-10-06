@@ -1,7 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { Client } from '../../pages/ClientDisplayList/ClientDisplayTypes';
 
-interface ClientsResponse{
+export interface ClientsResponse{
     clientsInformation:Client[];
 }
 

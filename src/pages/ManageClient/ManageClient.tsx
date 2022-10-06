@@ -13,6 +13,7 @@ import { ClientGrantType } from '../../components/ClientInformation/ClientGrantT
 import { ClientPostLogoutRedirectUrl } from '../../components/ClientInformation/ClientPostLogoutRedirectUrl';
 import { ClientRedirectUrlComponent } from '../../components/ClientInformation/ClientRedirectUrlComponent';
 import { ClientSecretComponent } from '../../components/ClientInformation/ClientSecretComponent';
+import { useSaveClientBasicInformation } from '../../graphQL/mutation/useSaveClientBasicInformation';
 import { useGetClientById } from '../../graphQL/query/useGetClientById';
 import { ClientInformationModel, ManageClientAction, ManageClientState } from './ManageClientType';
 
@@ -33,9 +34,16 @@ const reducer = (state:ManageClientState,action:ManageClientAction):ManageClient
                 header: action.header
             }
         case 'ADD_CLIENT':
+            let clientInfo = action.newclient;
             return {
                 ...state,
-                client: action.newclient
+                client: {
+                    id:clientInfo.id,clientId:clientInfo.clientId,clientName:clientInfo.clientName??'',description:clientInfo.description??'',
+                    accessTokenLifetime:clientInfo.accessTokenLifetime,createdDate:clientInfo.createdDate,enabled:clientInfo.enabled,
+                    requireConsent: clientInfo.requireConsent, requirePkce:clientInfo.requirePkce,allowedScopes:[],allowedGrantType:[]
+                    ,clientSecrets:clientInfo.clientSecrets??[],allowedCorsOrigins:clientInfo.allowedCorsOrigins??[],
+                    redirectUris:clientInfo.redirectUris??[],postLogoutRedirectUris:clientInfo.postLogoutRedirectUris??[]
+                }
             }
         case 'MODIFY_CLIENTID':
             return {
@@ -50,6 +58,7 @@ export const ManageClient = () => {
     const { clientId } = useParams();
     const { data } = useGetClientById(state.clientId);
     const navigate = useNavigate();
+    const [ SaveClientBasic ] = useSaveClientBasicInformation();
     const formik = useFormik<ClientInformationModel>({
         initialValues:{
             id:state.client.id,
@@ -57,7 +66,7 @@ export const ManageClient = () => {
             clientName:state.client.clientName,
             accessTokenLifetime:state.client.accessTokenLifetime,
             description:state.client.description,
-            createdDate:state.client.createdDate,
+            createdDate:state.client.createdDate.toString(),
             enabled:state.client.enabled,
             requireConsent:state.client.requireConsent,
             requirePkce: state.client.requirePkce
@@ -80,8 +89,26 @@ export const ManageClient = () => {
             return errors;
         },
         onSubmit: (data) => {
-            debugger
-            alert(data);
+            // debugger
+            // alert(data);
+            SaveClientBasic({
+                variables:{
+                    clientBasic:{
+                        clientId:data.clientId,
+                        id:data.id,
+                        clientName:data.clientName,
+                        accessTokenLifetime:data.accessTokenLifetime,
+                        createdDate:data.createdDate,
+                        description:data.description,
+                        enabled:data.enabled,
+                        requireConsent:data.requireConsent,
+                        requirePkce:data.requirePkce
+                    }
+                }
+            }).then((res)=>{
+                console.log('Saved Client')
+            }).catch(err=>console.log(err));
+
         },
         enableReinitialize:true,
     });
@@ -103,6 +130,8 @@ export const ManageClient = () => {
 
     const isFormFieldValid = (name:any) => !!(formik.touched[name as keyof ClientInformationModel] && formik.errors[name as keyof ClientInformationModel]);
 
+    //console.log(state)
+
     // const getFormErrorMessage = (name:any) => {
     //     return isFormFieldValid(name) && <small className="p-error">{formik.errors[name as keyof ClientInformationModel]}</small>;
     // };
@@ -111,7 +140,7 @@ export const ManageClient = () => {
         <React.Fragment>
             <div className='p-3'>
                 <Card title={state.header}>
-                    <form onSubmit={formik.handleSubmit}>
+                    <form onSubmit={formik.handleSubmit} className="p-fluid">
                         <div className='formgrid grid p-fluid'>
                             <div className='field col-12 p-3'>
                                 <span className="p-float-label">
@@ -121,7 +150,7 @@ export const ManageClient = () => {
                                         className={classNames({ 'p-invalid': isFormFieldValid('clientId') })}
                                         />
                                     <label htmlFor="clientId" className={classNames({ 'p-error': isFormFieldValid('clientId') })}>Client Id</label>
-                                    {/* {getFormErrorMessage('clientId')} */}
+                                    {isFormFieldValid("clientId") && <small className="p-error">{formik.errors["clientId"]}</small>}
                                 </span>
                             </div>
                             <div className='field col-12 p-3'>
@@ -207,7 +236,6 @@ export const ManageClient = () => {
             <div className='p-3'>
                 <ClientPostLogoutRedirectUrl postLogoutRedirectUrl={state.client.postLogoutRedirectUris} />
             </div>
-
 
         </React.Fragment>
     )

@@ -50,6 +50,7 @@ export const useGetClientById = (clientId:number) => {
   return useQuery<GetClientByIdResponse,GetClientByIdVariables>(GET_CLIENTS_BY_ID,{
     variables:{
         clientId: clientId
-    }
+    },
+    fetchPolicy:"no-cache"
   });
 }

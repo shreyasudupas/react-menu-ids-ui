@@ -24,6 +24,7 @@ export const useGetApiScopeById = (apiScopeId:number) => {
   return useQuery<GetApiScopeByIdResponse,GetApiScopeByIdVariable>(GETAPISCOPE_BY_ID,{
     variables:{
         id:apiScopeId
-    }
+    },
+    fetchPolicy: "no-cache"
   });
 }

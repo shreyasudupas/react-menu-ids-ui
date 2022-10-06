@@ -22,6 +22,7 @@ export const useGetRoleById = (RoleId:string) => {
   return useQuery<GetRoleByIdResponse,GetRoleByIdVariable>(GET_ROLEBYID,{
     variables:{
         roleId: RoleId
-    }
+    },
+    fetchPolicy:"no-cache"
   });
 }
