@@ -40,8 +40,8 @@ const reducer = (state:ManageClientState,action:ManageClientAction):ManageClient
                 client: {
                     id:clientInfo.id,clientId:clientInfo.clientId,clientName:clientInfo.clientName??'',description:clientInfo.description??'',
                     accessTokenLifetime:clientInfo.accessTokenLifetime,createdDate:clientInfo.createdDate,enabled:clientInfo.enabled,
-                    requireConsent: clientInfo.requireConsent, requirePkce:clientInfo.requirePkce,allowedScopes:[],allowedGrantType:[]
-                    ,clientSecrets:clientInfo.clientSecrets??[],allowedCorsOrigins:clientInfo.allowedCorsOrigins??[],
+                    requireConsent: clientInfo.requireConsent, requirePkce:clientInfo.requirePkce,allowedScopes:clientInfo.allowedScopes??[],allowedGrantType:
+                    clientInfo.allowedGrantType??[],clientSecrets:clientInfo.clientSecrets??[],allowedCorsOrigins:clientInfo.allowedCorsOrigins??[],
                     redirectUris:clientInfo.redirectUris??[],postLogoutRedirectUris:clientInfo.postLogoutRedirectUris??[]
                 }
             }

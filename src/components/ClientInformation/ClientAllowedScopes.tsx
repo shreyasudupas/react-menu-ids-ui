@@ -63,6 +63,7 @@ export const ClientAllowedScopes = ({ scopeList , clientId }:AllowedScopeType) =
 
     useEffect(()=>{
       if(scopeList !== null && scopeList !== undefined){
+        //debugger
         let scopeListItem:string[] = [];
         scopeList.forEach(i=> scopeListItem.push(i.scope));
         
