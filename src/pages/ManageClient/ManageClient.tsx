@@ -223,7 +223,7 @@ export const ManageClient = () => {
                 <ClientGrantType clientId={state.clientId} grantValue={state.client.allowedGrantType} />
             </div>
             <div className='p-3'>
-                <ClientSecretComponent key={state.clientId} clientSecret={state.client.clientSecrets} />
+                <ClientSecretComponent key={state.clientId} clientId={state.clientId} clientSecret={state.client.clientSecrets} />
             </div>
 
             <div className='p-3'>

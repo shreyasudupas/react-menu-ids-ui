@@ -7,22 +7,33 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { classNames } from 'primereact/utils'
 import React, { useEffect, useState } from 'react'
+import { useDeleteClientSecret } from '../../graphQL/mutation/useDeleteClientSecret'
+import { useSaveClientSecret } from '../../graphQL/mutation/useSaveClientSecret'
 import { ClientSecret } from '../../pages/ClientDisplayList/ClientDisplayTypes'
 
 type ClientSecretType = {
     clientSecret:ClientSecret[];
+    clientId:number;
 }
 
-export const ClientSecretComponent = ({ clientSecret }: ClientSecretType) => {
+export const ClientSecretComponent = ({ clientSecret,clientId }: ClientSecretType) => {
   const [clientSecretState,setClientSecret] = useState<ClientSecret[]>([]);
   const [dialogDisplay,setDialogDisplay] = useState<boolean>(false);
+  const [ clientIdState,setClientId ] = useState<number>(0); 
+  const [ saveClientSecret ] = useSaveClientSecret();
+  const [ deleteClientSecret ] = useDeleteClientSecret();
 
   useEffect(()=>{
 
     if(clientSecret !== null){
       setClientSecret(clientSecret);
     }
-  },[clientSecret])
+ 
+    if(clientId > 0){
+      setClientId(clientId)
+    }
+    
+  },[clientSecret,clientId])
 
   const formik = useFormik<ClientSecret>({
     initialValues:{
@@ -41,9 +52,29 @@ export const ClientSecretComponent = ({ clientSecret }: ClientSecretType) => {
 
     },
     onSubmit: (data) => {
-      setClientSecret(prevRedirect => 
-        [...clientSecretState,{ clientId:0,id:0,secretvalue: data.secretvalue }]
-    )
+      let cId = clientIdState;
+
+      saveClientSecret({
+        variables:{
+          clientSecret:{
+            id: 0,
+            clientId: cId,
+            secretValue:data.secretvalue
+          }
+        }
+      }).then((res)=>{
+        if(res.data?.saveClientSecret !== null){
+          let newSecret:ClientSecret = {
+            id: res.data?.saveClientSecret.id!,clientId: res.data?.saveClientSecret.clientId!,secretvalue:res.data?.saveClientSecret.secretvalue! 
+          };
+
+          setClientSecret(prevSecret => 
+            [...prevSecret, newSecret]
+          )    
+        }else{
+          console.log('Error in saving Client Secret')
+        }
+      });
 
     onHideDialog();
     formik.resetForm();
@@ -60,7 +91,22 @@ export const ClientSecretComponent = ({ clientSecret }: ClientSecretType) => {
   }
 
   const removeClientSecret = (rowData: ClientSecret) => {
-    setClientSecret((prev=> clientSecretState.filter(secret=> secret.id !== rowData.id)));
+
+    deleteClientSecret({
+      variables:{
+        clientSecret:{
+          id: rowData.id,
+          clientId: clientIdState,
+          secretValue:rowData.secretvalue
+        }
+      }
+    }).then((res)=>{
+      if(res.data?.deleteClientSecret !== null) {
+        setClientSecret((prev=> clientSecretState.filter(secret=> secret.id !== rowData.id)));
+      }
+    })
+    .catch(err=> console.log(err))
+    
   }
 
   const onHideDialog = () => {
