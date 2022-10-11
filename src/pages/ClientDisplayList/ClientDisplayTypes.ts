@@ -29,7 +29,7 @@ export interface ClientSecret{
 
 export interface AllowedCorsOrigin{
     id:number;
-    //clientId:number;
+    clientId:number;
     url:string;
 }
 

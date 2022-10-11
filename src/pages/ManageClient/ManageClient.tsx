@@ -227,7 +227,7 @@ export const ManageClient = () => {
             </div>
 
             <div className='p-3'>
-                <ClientAllowedCorsOrigin allowedCorsOrigins={state.client.allowedCorsOrigins} />
+                <ClientAllowedCorsOrigin clientId={state.clientId} allowedCorsOrigins={state.client.allowedCorsOrigins} />
             </div>
 
             <div className='p-3'>

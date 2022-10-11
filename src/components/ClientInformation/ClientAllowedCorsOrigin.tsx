@@ -7,27 +7,37 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useState } from 'react'
+import { useDeleteClientAllowedCors } from '../../graphQL/mutation/useDeleteClientAllowedCors';
+import { useSaveClientAllowedCors } from '../../graphQL/mutation/useSaveClientAllowedCors';
 import { AllowedCorsOrigin } from '../../pages/ClientDisplayList/ClientDisplayTypes';
 
 type AllowedCorsOriginType = {
     allowedCorsOrigins:AllowedCorsOrigin[];
+    clientId:number;
 }
 
-export const ClientAllowedCorsOrigin = ({ allowedCorsOrigins }:AllowedCorsOriginType) => {
+export const ClientAllowedCorsOrigin = ({ allowedCorsOrigins, clientId }:AllowedCorsOriginType) => {
     const [allowedCorsOriginState,setAllowedCors] = useState<AllowedCorsOrigin[]>([]);
+    const [ clientIdState,setClientId ] = useState<number>(0);
     const [dialogDisplay,setDialogDisplay] = useState<boolean>(false);
+    const [ saveClientAllowedSecret ] = useSaveClientAllowedCors();
+    const [ deleteClientAllowedSecret ] = useDeleteClientAllowedCors();
   
     useEffect(()=>{
   
       if(allowedCorsOrigins !== null){
         setAllowedCors(allowedCorsOrigins);
       }
-    },[allowedCorsOrigins])
+      if(clientId > 0){
+        setClientId(clientId);
+      }
+
+    },[allowedCorsOrigins,clientId])
   
     const formik = useFormik<AllowedCorsOrigin>({
       initialValues:{
         id:0,
-        //clientId:0,
+        clientId:0,
         url:''
       },
       validate: (data) => {
@@ -41,13 +51,28 @@ export const ClientAllowedCorsOrigin = ({ allowedCorsOrigins }:AllowedCorsOrigin
   
       },
       onSubmit: (data) => {
-        setAllowedCors(prevCors => 
-          [...prevCors,{ id:0,url: data.url }]
-      )
-  
-      onHideDialog();
-      formik.resetForm();
-      }
+
+        saveClientAllowedSecret({
+          variables:{
+            corsOrigin:{
+              clientId:clientIdState,
+              id:0,
+              url:data.url
+            }
+          }
+        }).then((res)=>{
+          let result = res.data?.saveAllowedCorsOrigin!;
+          if(result !== null){
+            setAllowedCors(prevCors => 
+              [...prevCors,{ id:result?.id ,url: result?.url , clientId: result?.clientId }]
+            )
+          }
+        })
+        .catch(err => console.log(err) )
+      
+          onHideDialog();
+          formik.resetForm();
+          }
     })
   
     const deleteAllowedCorsUrlTemplate = (rowData: AllowedCorsOrigin) => {
@@ -60,7 +85,24 @@ export const ClientAllowedCorsOrigin = ({ allowedCorsOrigins }:AllowedCorsOrigin
     }
   
     const removeAllowedCors = (rowData: AllowedCorsOrigin) => {
-        setAllowedCors((prev=> allowedCorsOriginState.filter(allowedCors=> allowedCors.id !== rowData.id)));
+
+      deleteClientAllowedSecret({
+        variables:{
+          corsOrigin:{
+             clientId: clientIdState,
+             id: rowData.id,
+             url: rowData.url
+          }
+        }
+      }).then((res)=>{
+        let result = res.data?.deleteAllowedCorsOrigin!;
+        if(result !== null){
+          setAllowedCors((prev=> allowedCorsOriginState.filter(allowedCors=> allowedCors.id !== result.id)));
+        }
+      })
+      .catch( err => console.log(err));
+
+        
     }
   
     const onHideDialog = () => {
