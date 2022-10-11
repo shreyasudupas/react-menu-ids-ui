@@ -231,7 +231,7 @@ export const ManageClient = () => {
             </div>
 
             <div className='p-3'>
-                <ClientRedirectUrlComponent key={state.clientId} redirectUrls={state.client.redirectUris} />
+                <ClientRedirectUrlComponent key={state.clientId} clientId={state.clientId} redirectUrls={state.client.redirectUris} />
             </div>
             <div className='p-3'>
                 <ClientPostLogoutRedirectUrl postLogoutRedirectUrl={state.client.postLogoutRedirectUris} />

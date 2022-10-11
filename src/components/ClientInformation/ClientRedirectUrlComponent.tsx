@@ -7,21 +7,31 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { classNames } from 'primereact/utils'
 import React, { useEffect, useState } from 'react'
+import { useDeleteClientRedirectUrl } from '../../graphQL/mutation/useDeleteClientRedirectUrl'
+import { useSaveClientRedirectUrl } from '../../graphQL/mutation/useSaveClientRedirectUrl'
 import { RedirectUrl } from '../../pages/ClientDisplayList/ClientDisplayTypes'
 
 export type RedirectUrlType = {
     redirectUrls:RedirectUrl[];
+    clientId:number;
 }
 
-export const ClientRedirectUrlComponent = ({redirectUrls}:RedirectUrlType) => {
+export const ClientRedirectUrlComponent = ({ redirectUrls,clientId }:RedirectUrlType) => {
     const [clientRedirectUrlState,setClientRedirectUrl] = useState<RedirectUrl[]>([]);
+    const [ clientIdState,setClientId] = useState<number>(0);
     const [dialogDisplay,setDialogDisplay] = useState<boolean>(false);
+    const [ saveClientRedirectUrl ] = useSaveClientRedirectUrl();
+    const [ deleteClientRedirectUrl ] = useDeleteClientRedirectUrl();
 
     useEffect(()=>{
         if(redirectUrls !== null){
             setClientRedirectUrl(redirectUrls);
         }
-    },[redirectUrls])
+
+        if(clientId > 0){
+            setClientId(clientId);
+        }
+    },[redirectUrls,clientId])
 
     const formik = useFormik<RedirectUrl>({
         initialValues:{
@@ -41,9 +51,24 @@ export const ClientRedirectUrlComponent = ({redirectUrls}:RedirectUrlType) => {
         onSubmit: (data) => {
             //alert('clicked')
 
-            setClientRedirectUrl(prevRedirect => 
-                [...clientRedirectUrlState,{ clientId:0,id:0,redirectUri:data.redirectUri }]
-            )
+            saveClientRedirectUrl({
+                variables:{
+                    clientRedirect:{
+                        clientId: clientIdState,
+                        id: 0,
+                        redirectUri: data.redirectUri
+                    }
+                }
+            }).then((res)=>{
+                let result = res.data?.saveClientRedirectUrl!;
+
+                if(result !== null) {
+                    setClientRedirectUrl(prevRedirect => 
+                        [...prevRedirect, result]
+                    );
+                }
+            })
+            .catch(err => console.log(err));
 
             onHideDialog();
             formik.resetForm();
@@ -61,7 +86,23 @@ export const ClientRedirectUrlComponent = ({redirectUrls}:RedirectUrlType) => {
     }
 
     const removeRedirectUrl = (rowData: RedirectUrl) => {
-        setClientRedirectUrl((prev=> clientRedirectUrlState.filter(redirect=> redirect.id !== rowData.id)));
+
+        deleteClientRedirectUrl({
+            variables:{
+                clientRedirect:{
+                    clientId: clientIdState,
+                    id: rowData.id,
+                    redirectUri: rowData.redirectUri
+                }
+            }
+        }).then((res)=>{
+            let result= res.data?.deleteClientRedirectUrl!;
+
+            if(result !== null){
+                setClientRedirectUrl((prevClientRedirectUrl=> prevClientRedirectUrl.filter(redirect=> redirect.id !== result.id)));
+            }
+        }).catch(err => console.log(err))
+        
       }
 
     const onHideDialog = () => {
