@@ -7,22 +7,32 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useState } from 'react'
+import { useDeletePostLogoutRedirectUrl } from '../../graphQL/mutation/useDeletePostLogoutRedirectUrl';
+import { useSaveClientPostLogoutRedirectUrl } from '../../graphQL/mutation/useSaveClientPostLogoutRedirectUrl';
 import { PostLogoutRedirectUri } from '../../pages/ClientDisplayList/ClientDisplayTypes';
 
 type PostLogoutRedirectType = {
     postLogoutRedirectUrl:PostLogoutRedirectUri[];
+    clientId:number;
 }
 
-export const ClientPostLogoutRedirectUrl = ({ postLogoutRedirectUrl }:PostLogoutRedirectType) => {
+export const ClientPostLogoutRedirectUrl = ({ postLogoutRedirectUrl, clientId }:PostLogoutRedirectType) => {
     const [postLogoutRedirectState,setPostLogoutRedirect] = useState<PostLogoutRedirectUri[]>([]);
+    const [ clientIdState,setClientId ] = useState<number>(0);
     const [dialogDisplay,setDialogDisplay] = useState<boolean>(false);
+    const [ saveClientPostLogoutRedirectUrl ] = useSaveClientPostLogoutRedirectUrl();
+    const [ deleteClientPostLogoutRedirectUrl ] = useDeletePostLogoutRedirectUrl();
   
     useEffect(()=>{
   
       if(postLogoutRedirectUrl !== null){
         setPostLogoutRedirect(postLogoutRedirectUrl);
       }
-    },[postLogoutRedirectUrl])
+
+      if(clientId>0){
+        setClientId(clientId);
+      }
+    },[postLogoutRedirectUrl,clientId])
   
     const formik = useFormik<PostLogoutRedirectUri>({
       initialValues:{
@@ -41,9 +51,26 @@ export const ClientPostLogoutRedirectUrl = ({ postLogoutRedirectUrl }:PostLogout
   
       },
       onSubmit: (data) => {
-        setPostLogoutRedirect(prevLogoutUrl => 
-          [...postLogoutRedirectState,{ clientId:0,id:0,postLogoutRedirectUri: data.postLogoutRedirectUri }]
-      )
+
+        saveClientPostLogoutRedirectUrl({
+          variables:{
+            clientPostLogout:{
+              id:0,
+              clientId: clientIdState,
+              postLogoutRedirectUri: data.postLogoutRedirectUri
+            }
+          }
+        }).then((res)=>{
+          let result = res.data?.saveClientPostLogoutRedirectUrl!;
+
+          if(result !== null){
+            setPostLogoutRedirect(prevLogoutUrl => 
+              [...prevLogoutUrl,result]
+            )
+          }
+
+        }).catch(err=>console.log(err))
+        
   
       onHideDialog();
       formik.resetForm();
@@ -60,7 +87,23 @@ export const ClientPostLogoutRedirectUrl = ({ postLogoutRedirectUrl }:PostLogout
     }
   
     const removePostLogoutUrl = (rowData: PostLogoutRedirectUri) => {
-        setPostLogoutRedirect((prev=> postLogoutRedirectState.filter(postLogout=> postLogout.id !== rowData.id)));
+
+        deleteClientPostLogoutRedirectUrl({
+          variables:{
+            clientPostLogout:{
+              id: rowData.id,
+              clientId: clientIdState,
+              postLogoutRedirectUri: rowData.postLogoutRedirectUri
+            }
+          }
+        }).then((res)=>{
+          let result = res.data?.deleteClientPostLogoutRedirectUrl!;
+
+          if(result !== null){
+            setPostLogoutRedirect((prevLogoutRedirectUrl=> prevLogoutRedirectUrl.filter(postLogout=> postLogout.id !== result.id)));
+          }
+        }).catch(err=>console.log(err))
+        
     }
   
     const onHideDialog = () => {

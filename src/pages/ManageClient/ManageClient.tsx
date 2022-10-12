@@ -234,7 +234,7 @@ export const ManageClient = () => {
                 <ClientRedirectUrlComponent key={state.clientId} clientId={state.clientId} redirectUrls={state.client.redirectUris} />
             </div>
             <div className='p-3'>
-                <ClientPostLogoutRedirectUrl postLogoutRedirectUrl={state.client.postLogoutRedirectUris} />
+                <ClientPostLogoutRedirectUrl clientId={state.clientId} postLogoutRedirectUrl={state.client.postLogoutRedirectUris} />
             </div>
 
         </React.Fragment>
