@@ -23,6 +23,7 @@ import { UserRoleList } from '../pages/RoleList/RoleList';
 import { UserRole } from '../pages/ManageRole/ManageRole';
 import { ClientDisplay } from '../pages/ClientDisplayList/ClientDisplay';
 import { ManageClient } from '../pages/ManageClient/ManageClient';
+import { Address } from '../pages/Address/Address';
 
 function App() {
   
@@ -73,6 +74,7 @@ function App() {
                   <Route path='manageRole/:roleId' element={ <UserRole/> }/>
                   <Route path='clients' element={ <ClientDisplay/> } />
                   <Route path='client/:clientId' element={ <ManageClient/> }/>
+                  <Route path='address' element={ <Address/> }/>
                </Route>
             </Route>
 

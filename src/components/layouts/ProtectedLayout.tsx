@@ -31,8 +31,9 @@ const ProtectedLayout = () => {
                     command: () => { navigate('operation/clients') }
                 },
                 {
-                    label: 'Justify',
-                    icon: 'pi pi-fw pi-align-justify'
+                    label: 'Address',
+                    icon: 'pi pi-fw pi-align-justify',
+                    command: () => { navigate('operation/address') }
                 },
 
             ]
