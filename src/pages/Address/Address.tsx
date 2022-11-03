@@ -155,10 +155,10 @@ const setCity = (cityId:any) => {
     }
 }
 
-const setArea = (areaId:any) => {
+// const setArea = (areaId:any) => {
 
-  dispatch({ type:'UPDATE_SELECTED_AREAS',selectedAreaId: areaId });
-}
+//   dispatch({ type:'UPDATE_SELECTED_AREAS',selectedAreaId: areaId });
+// }
 
 const setNewAddedState = (newState:State) => {
   dispatch({ type: 'ADD_NEW_STATE', newState: newState });
