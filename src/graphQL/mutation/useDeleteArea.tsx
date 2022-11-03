@@ -2,7 +2,7 @@ import { gql, useMutation } from '@apollo/client'
 import { Area } from '../../pages/Address/AddressType';
 
 interface DeleteAreaResponse{
-    addArea:Area | null;
+  deleteArea:Area | null;
 }
 
 interface DeleteAreaVariable{

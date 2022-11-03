@@ -7,16 +7,28 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
 import { classNames } from 'primereact/utils'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useAddArea } from '../../graphQL/mutation/useAddArea'
+import { useDeleteArea } from '../../graphQL/mutation/useDeleteArea'
 import { Area } from '../../pages/Address/AddressType'
 
 interface AreaProps{
     areas:Area[];
     stateId:number;
+    sendArea: (newArea:Area) => void;
+    sendDeletedArea: (deletedArea:Area) => void;
 }
 
-export const Areas = ({ areas,stateId }: AreaProps) => {
+export const Areas = ({ areas,stateId,sendArea,sendDeletedArea }: AreaProps) => {
     const [areaDialog,setAreaDialog] = useState<boolean>(false);
+    const [ areaState,setArea ] = useState<Area[]>([]);
+    const [ addArea ] = useAddArea();
+    const [ deleteArea ] = useDeleteArea();
+
+    useEffect(()=>{
+        setArea(areas)
+    },[areas])
+
     const formik = useFormik<Area>({
         initialValues:{
           id:0,
@@ -33,7 +45,25 @@ export const Areas = ({ areas,stateId }: AreaProps) => {
           return errors;
         },
         onSubmit: (data) =>{
-            alert(data)
+            //alert(data)
+
+            addArea({
+              variables:{
+                newArea:{
+                  id:0,
+                  areaName: data.areaName,
+                  cityId: data.cityId
+                }
+              }
+            }).then((res)=>{
+              let result = res.data?.addArea;
+
+              if(result !== null){
+                setArea(prevAreas => [...prevAreas,result!]);
+
+                sendArea(result!);
+              }
+            })
     
             formik.resetForm();
         },
@@ -55,6 +85,39 @@ export const Areas = ({ areas,stateId }: AreaProps) => {
       }
 
       const isFormFieldValid = (name:any) => !!(formik.touched[name as keyof Area] && formik.errors[name as keyof Area]);
+  
+  const deleteAreaTemplate = (rowData:Area) => {
+    return (
+      <Button
+        icon="pi pi-user-minus"
+        className="p-button-rounded p-button-danger"
+        aria-label="Bookmark"
+        onClick={()=>removeArea(rowData)}
+      />
+    )
+  }
+
+  const removeArea = (rowData:Area) => {
+
+    deleteArea({
+      variables:{
+        area:{
+          id:rowData.id,
+          areaName: rowData.areaName,
+          cityId: rowData.cityId
+        }
+      }
+    }).then((res)=>{
+      //debugger
+        let result = res.data?.deleteArea;
+
+        if(result !== null){
+          setArea(prevAreas=> prevAreas.filter(a=>a.id !== result?.id));
+
+          sendDeletedArea(result!);
+        }
+    }).catch(err=>console.log(err))
+  }
 
   return (
       <React.Fragment>
@@ -62,8 +125,9 @@ export const Areas = ({ areas,stateId }: AreaProps) => {
               <Toolbar className="mb-4" left={leftAreaToolbarTemplate}></Toolbar>
 
               <div className='col-12'>
-                  <DataTable value={areas} responsiveLayout="scroll">
+                  <DataTable value={areaState} responsiveLayout="scroll">
                       <Column field="areaName" header="Area"></Column>
+                      <Column header="Delete" body={deleteAreaTemplate} />
                   </DataTable>
               </div>
           </Card>

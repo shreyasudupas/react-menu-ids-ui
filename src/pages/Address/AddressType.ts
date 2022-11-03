@@ -39,3 +39,7 @@ export type AddressAction =
 | { type:'REMOVE_CITY', deleteCity: City }
 | { type:'ADD_CITY_TO_STATE', newCity: City , selectedStateId:number }
 | { type:'REMOVE_CITY_FROM_STATE', cityId: number , selectedStateId:number }
+| { type:'ADD_NEW_AREA', newArea: Area }
+| { type:'REMOVE_AREA', deleteAreaId: number }
+| { type:'ADD_AREA_TO_STATES', newArea: Area, selectedCityId:number,selectedStateId:number }
+| { type:'REMOVE_AREA_FROM_STATES', areaId: number , selectedCityId:number ,selectedStateId:number}

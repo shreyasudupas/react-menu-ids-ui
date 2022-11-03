@@ -4,7 +4,7 @@ import { Areas } from '../../components/address/Areas'
 import { Cities } from '../../components/address/Cities'
 import { States } from '../../components/address/States'
 import { useGetAddressList } from '../../graphQL/query/useGetAddressList'
-import { AddressAction, AddressState, City, State } from './AddressType'
+import { AddressAction, AddressState, Area, City, State } from './AddressType'
 
 const inititialState :AddressState = {
   States:[],
@@ -86,6 +86,30 @@ const reducer = (state:AddressState,action:AddressAction):AddressState =>{
        States: state.States.map( state => 
         state.id === action.selectedStateId? { id:state.id,name:state.name,cities: state.cities.filter(c=>c.id !== action.cityId)} : {...state})
       }
+    case 'ADD_NEW_AREA':
+      return{
+        ...state,
+        Areas: [...state.Areas,action.newArea]
+      }
+    case 'REMOVE_AREA':
+      return {
+        ...state,
+        Areas: state.Areas.filter(a=> a.id !== action.deleteAreaId)
+      }
+    case 'ADD_AREA_TO_STATES':
+      return {
+        ...state,
+        States: state.States.map(state=>
+          state.id === action.selectedStateId? { id: state.id,name:state.name,cities: state.cities.map(city=>
+            city.id === action.selectedCityId? { id: city.id,stateId: city.stateId,areas:[...city.areas,action.newArea],name:state.name} : {...city})! } :{...state})
+      }
+    case 'REMOVE_AREA_FROM_STATES':
+      return {
+        ...state,
+        States: state.States.map(state=>
+          state.id === action.selectedStateId? { id: state.id,name:state.name,cities: state.cities.map(city=>
+            city.id === action.selectedCityId? { id:city.id,name:city.name,stateId:city.stateId,areas: city.areas.filter(a=>a.id !== action.areaId) }:{...city}) } :{...state})
+      }
   }
 } 
 
@@ -152,8 +176,21 @@ const setNewCity = (newCity:City) => {
 
 const removeCity = (removeCity:City) => {
   dispatch({ type:'REMOVE_CITY',deleteCity: removeCity });
-  
+
   dispatch({ type: 'REMOVE_CITY_FROM_STATE',cityId: removeCity.id,selectedStateId: state.selectedStateId });
+}
+
+const setNewArea = (addNewArea:Area) => {
+  dispatch({ type:'ADD_NEW_AREA',newArea: addNewArea });
+
+  dispatch({ type: 'ADD_AREA_TO_STATES',newArea:addNewArea ,selectedCityId: state.selectedCityId,selectedStateId: state.selectedStateId });
+}
+
+const removeArea = (removeArea:Area) => {
+  //debugger
+  dispatch({ type:'REMOVE_AREA',deleteAreaId:removeArea.id });
+
+  dispatch({ type:'REMOVE_AREA_FROM_STATES',areaId:removeArea.id,selectedCityId:state.selectedCityId,selectedStateId:state.selectedStateId });
 }
 
   return (
@@ -182,7 +219,9 @@ const removeCity = (removeCity:City) => {
           (state.selectedCityId === 0) ? <React.Fragment></React.Fragment> :
             <div className='p-3'>
               <Areas areas={state.Areas}
-                      stateId={state.selectedCityId}/>
+                      stateId={state.selectedCityId}
+                      sendArea={setNewArea}
+                      sendDeletedArea={removeArea}/>
             </div>
           
             
