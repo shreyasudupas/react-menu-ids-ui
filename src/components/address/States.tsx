@@ -17,9 +17,11 @@ interface StateType{
     states:State[];
     selectedStates:number;
     sendStateIdFromState: (stateId:any) => void;
+    newAddedState: (newState:State) => void;
+    sendDeletedState: (deleteState:State) => void;
 }
 
-export const States = ({ states,selectedStates,sendStateIdFromState }:StateType) => {
+export const States = ({ states,selectedStates,sendStateIdFromState,newAddedState,sendDeletedState }:StateType) => {
 const [ statesState,setStates ] = useState<State[]>([]);
 const [stateDialog,setStateDialog] = useState<boolean>(false);
 const [ addState ] = useAddState();
@@ -63,6 +65,9 @@ const formik = useFormik<State>({
           if(result!==null && result !== undefined){
             setStates(prevStates=> [...prevStates,result!]);
 
+            //send to parent component to update the reducer state
+            newAddedState(result);
+
             console.log('State added');
           }
       }).catch(ex=>console.log(ex));
@@ -86,6 +91,8 @@ const removeState = (rowData:State) => {
 
       if(result !== null){
           setStates(prevStates=> prevStates.filter(x=>x.id !== result?.id));
+
+          sendDeletedState(result!);
       }
 
   }).catch(err=> console.log(err))
@@ -104,7 +111,7 @@ const removeState = (rowData:State) => {
       const deleteStateTemplate = (rowData:State) => {
         return (
           <Button
-            icon="pi pi-user-edit"
+            icon="pi pi-user-minus"
             className="p-button-rounded p-button-danger"
             aria-label="Bookmark"
             onClick={()=>removeState(rowData)}

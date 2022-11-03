@@ -33,3 +33,9 @@ export type AddressAction =
 | { type:'UPDATE_SELECTED_STATES', selectedStateId: any }
 | { type:'UPDATE_SELECTED_CITIES', selectedCityId: any }
 | { type:'UPDATE_SELECTED_AREAS', selectedAreaId: any }
+| { type:'ADD_NEW_STATE', newState: State }
+| { type:'REMOVE_STATE', deleteState: State }
+| { type:'ADD_NEW_CITY', newCity: City }
+| { type:'REMOVE_CITY', deleteCity: City }
+| { type:'ADD_CITY_TO_STATE', newCity: City , selectedStateId:number }
+| { type:'REMOVE_CITY_FROM_STATE', cityId: number , selectedStateId:number }

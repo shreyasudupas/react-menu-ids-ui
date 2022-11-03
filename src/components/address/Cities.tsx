@@ -8,7 +8,9 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
 import { classNames } from 'primereact/utils'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useAddNewCity } from '../../graphQL/mutation/useAddNewCity'
+import { useDeleteCity } from '../../graphQL/mutation/useDeleteCity'
 import { City } from '../../pages/Address/AddressType'
 
 interface CityType{
@@ -16,10 +18,20 @@ interface CityType{
     selectedCity:any;
     selectedStateId:number;
     sendUpdatedCityId:(cityId:any) => void;
+    sendNewCity: (newCity:City) => void;
+    sendDeletedCity: (deletedCity:City) => void;
 }
 
-export const Cities = ({ cities,selectedCity,sendUpdatedCityId,selectedStateId }:CityType) => {
+export const Cities = ({ cities,selectedCity,sendUpdatedCityId,selectedStateId,sendNewCity,sendDeletedCity }:CityType) => {
   const [cityDialog,setCityDialog] = useState<boolean>(false);
+  const [ citiesState,setCities] = useState<City[]>([]);
+  const [ deleteCity ] = useDeleteCity();
+  const [ addNewCity ] = useAddNewCity();
+
+useEffect(()=>{
+  setCities(cities);
+},[cities])
+
   const formik = useFormik<City>({
     initialValues:{
       id:0,
@@ -37,7 +49,28 @@ export const Cities = ({ cities,selectedCity,sendUpdatedCityId,selectedStateId }
       return errors;
     },
     onSubmit: (data) =>{
-        alert(data)
+        //alert(data)
+        addNewCity({
+          variables:{
+            newCity:{
+              id:0,
+              name: data.name,
+              stateId:data.stateId,
+              areas: data.areas
+            }
+          }
+        }).then((res)=>{
+          let result = res.data?.addCity;
+
+          if(result !== null ){
+            setCities(prevCities => 
+              [...prevCities,result!]);
+
+            sendNewCity(result!);
+          }
+        })
+        .catch(err => console.log(err));
+
 
         formik.resetForm();
     },
@@ -63,6 +96,38 @@ export const Cities = ({ cities,selectedCity,sendUpdatedCityId,selectedStateId }
   const getFormErrorMessage = (name:any) => {
       return isFormFieldValid(name) && <small className="p-error">{formik.errors['name']}</small>;
   };
+
+  const deleteCityTemplate = (rowData:City) => {
+    return (
+      <Button
+        icon="pi pi-user-minus"
+        className="p-button-rounded p-button-danger"
+        aria-label="Bookmark"
+        onClick={()=>removeCity(rowData)}
+  />
+    )
+  }
+
+const removeCity = (rowData:City) => {
+    deleteCity({
+      variables:{
+        city:{
+          id: rowData.id,
+          name: rowData.name,
+          stateId: selectedStateId,
+          areas: rowData.areas
+        }
+      }
+    }).then((result)=> {
+      let res = result.data?.deleteCity;
+      
+      if(res != null){
+          setCities(prevCity => prevCity.filter(c=>c.id !== res?.id));
+
+          sendDeletedCity(res);
+      }
+    }).catch(err=>console.log(err));
+}
       
   return (
     <React.Fragment>
@@ -70,13 +135,14 @@ export const Cities = ({ cities,selectedCity,sendUpdatedCityId,selectedStateId }
         <Toolbar className="mb-4" left={leftCityToolbarTemplate}></Toolbar>
 
         <div className='col-12'>
-          <DataTable value={cities} responsiveLayout="scroll">
+          <DataTable value={citiesState} responsiveLayout="scroll">
             <Column field="name" header="Cities"></Column>
+            <Column header="Delete" body={deleteCityTemplate} />
           </DataTable>
         </div>
         <div className='col-6'>
           <Dropdown value={selectedCity}
-            options={cities}
+            options={citiesState}
             onChange={(e) => sendUpdatedCityId(e.value)}
             optionLabel="name"
             optionValue='id'

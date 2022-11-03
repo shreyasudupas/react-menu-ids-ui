@@ -4,7 +4,7 @@ import { Areas } from '../../components/address/Areas'
 import { Cities } from '../../components/address/Cities'
 import { States } from '../../components/address/States'
 import { useGetAddressList } from '../../graphQL/query/useGetAddressList'
-import { AddressAction, AddressState } from './AddressType'
+import { AddressAction, AddressState, City, State } from './AddressType'
 
 const inititialState :AddressState = {
   States:[],
@@ -47,6 +47,45 @@ const reducer = (state:AddressState,action:AddressAction):AddressState =>{
         ...state,
         selectedAreaId: action.selectedAreaId
       };
+    case 'ADD_NEW_STATE':
+      return {
+        ...state,
+        States: [...state.States,action.newState]
+      }
+    case 'REMOVE_STATE':
+      return {
+        ...state,
+        States: state.States.filter(s=>s.id !== action.deleteState.id) 
+      }
+    case 'ADD_NEW_CITY':
+      return {
+        ...state,
+        Cities: [...state.Cities,action.newCity]
+      }
+    case 'REMOVE_CITY':
+      return {
+        ...state,
+        Cities: state.Cities.filter(s=>s.id !== action.deleteCity.id) 
+      }
+    case 'ADD_CITY_TO_STATE':
+      let city = {
+        id: action.newCity.id,
+        name: action.newCity.name,
+        stateId: action.selectedStateId,
+        areas:[]
+      };
+
+      return {
+        ...state,
+        States: state.States.map( state => 
+          state.id === action.selectedStateId? { id:state.id,name:state.name,cities:[...state.cities,city]} : {...state})
+      }
+    case 'REMOVE_CITY_FROM_STATE':
+      return {
+       ...state,
+       States: state.States.map( state => 
+        state.id === action.selectedStateId? { id:state.id,name:state.name,cities: state.cities.filter(c=>c.id !== action.cityId)} : {...state})
+      }
   }
 } 
 
@@ -97,12 +136,34 @@ const setArea = (areaId:any) => {
   dispatch({ type:'UPDATE_SELECTED_AREAS',selectedAreaId: areaId });
 }
 
+const setNewAddedState = (newState:State) => {
+  dispatch({ type: 'ADD_NEW_STATE', newState: newState });
+}
+
+const setDeletedState = (stateToRemove:State) => {
+  dispatch({ type:'REMOVE_STATE',deleteState: stateToRemove })
+}
+
+const setNewCity = (newCity:City) => {
+  dispatch({ type: 'ADD_NEW_CITY', newCity: newCity });
+
+  dispatch({ type:'ADD_CITY_TO_STATE',newCity:newCity,selectedStateId: state.selectedStateId });
+}
+
+const removeCity = (removeCity:City) => {
+  dispatch({ type:'REMOVE_CITY',deleteCity: removeCity });
+  
+  dispatch({ type: 'REMOVE_CITY_FROM_STATE',cityId: removeCity.id,selectedStateId: state.selectedStateId });
+}
+
   return (
     <React.Fragment>
       <Card title="Edit Address">
         <States selectedStates={state.selectedStateId} 
                 states={state.States} 
                 sendStateIdFromState={setState}
+                newAddedState={setNewAddedState}
+                sendDeletedState={setDeletedState}
         />
         
         {
@@ -112,6 +173,8 @@ const setArea = (areaId:any) => {
                       selectedCity={state.selectedCityId}
                       sendUpdatedCityId={setCity}
                       selectedStateId={state.selectedStateId}
+                      sendNewCity= {setNewCity}
+                      sendDeletedCity={removeCity}
                       />
             </div>
         }
