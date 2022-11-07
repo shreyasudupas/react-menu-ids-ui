@@ -1,4 +1,5 @@
 import { useFormik } from 'formik';
+import moment from 'moment';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Checkbox } from 'primereact/checkbox';
@@ -21,7 +22,7 @@ const initialState:ManageClientState = {
     header:"Add Client Information",
     clientId:0,
     client: {
-        id:0,clientId:'',clientName:'',description:'',createdDate:new Date(),enabled:false,requireConsent:false,requirePkce:false,
+        id:0,clientId:'',clientName:'',description:'',createdDate:new Date(),enabled:false,requireConsent:false,requirePkce:false,requireClientSecret:false,
         allowedScopes:[],allowedGrantType:[],clientSecrets:[],allowedCorsOrigins:[],accessTokenLifetime:0,redirectUris:[],postLogoutRedirectUris:[]
     }
 }
@@ -42,7 +43,7 @@ const reducer = (state:ManageClientState,action:ManageClientAction):ManageClient
                     accessTokenLifetime:clientInfo.accessTokenLifetime,createdDate:clientInfo.createdDate,enabled:clientInfo.enabled,
                     requireConsent: clientInfo.requireConsent, requirePkce:clientInfo.requirePkce,allowedScopes:clientInfo.allowedScopes??[],allowedGrantType:
                     clientInfo.allowedGrantType??[],clientSecrets:clientInfo.clientSecrets??[],allowedCorsOrigins:clientInfo.allowedCorsOrigins??[],
-                    redirectUris:clientInfo.redirectUris??[],postLogoutRedirectUris:clientInfo.postLogoutRedirectUris??[]
+                    redirectUris:clientInfo.redirectUris??[],postLogoutRedirectUris:clientInfo.postLogoutRedirectUris??[],requireClientSecret: clientInfo.requireClientSecret
                 }
             }
         case 'MODIFY_CLIENTID':
@@ -69,9 +70,11 @@ export const ManageClient = () => {
             createdDate:state.client.createdDate.toString(),
             enabled:state.client.enabled,
             requireConsent:state.client.requireConsent,
-            requirePkce: state.client.requirePkce
+            requirePkce: state.client.requirePkce,
+            requireClientSecret: state.client.requireClientSecret
         },
         validate:(data) => {
+            //debugger
             let errors:any = {};
 
             if(!data.clientId){
@@ -89,8 +92,9 @@ export const ManageClient = () => {
             return errors;
         },
         onSubmit: (data) => {
-            // debugger
+            debugger
             // alert(data);
+            let createdDate = moment(data.createdDate).format('DD/MM/YYYY h:mm:ss');
             SaveClientBasic({
                 variables:{
                     clientBasic:{
@@ -98,11 +102,12 @@ export const ManageClient = () => {
                         id:data.id,
                         clientName:data.clientName,
                         accessTokenLifetime:data.accessTokenLifetime,
-                        createdDate:data.createdDate,
+                        createdDate:createdDate,
                         description:data.description,
                         enabled:data.enabled,
                         requireConsent:data.requireConsent,
-                        requirePkce:data.requirePkce
+                        requirePkce:data.requirePkce,
+                        requireClientSecret: data.requireClientSecret
                     }
                 }
             }).then((res)=>{
@@ -114,14 +119,14 @@ export const ManageClient = () => {
     });
 
     useEffect(()=>{
-
+        //debugger
         if(clientId !== undefined){
-            dispatch({type:'UPDATE_HEADER',header:'Edit Client Information'})
+            dispatch({type:'UPDATE_HEADER',header:'Edit Client Information'});
             dispatch({type:'MODIFY_CLIENTID',id:parseInt(clientId)})
         }
 
         if(data !== undefined){
-            if(data !== null){
+            if(data.clientById !== null){
                 dispatch({type:"ADD_CLIENT",newclient:data.clientById})
             }
         }
@@ -177,7 +182,7 @@ export const ManageClient = () => {
                                 <span className="p-float-label">
                                     <InputNumber id="accessTokenLifetime" 
                                         value={formik.values.accessTokenLifetime} 
-                                        onChange={formik.handleChange}
+                                        onValueChange={formik.handleChange}
                                         className={classNames({ 'p-invalid': isFormFieldValid('accessTokenLifetime') })}
                                         />
                                     <label htmlFor="accessTokenLifetime">Access Token Lifetime</label>
@@ -205,6 +210,13 @@ export const ManageClient = () => {
                                  onChange={formik.handleChange}></Checkbox>
                                 <label htmlFor="requirePkce" className="p-checkbox-label"> Require PKCE</label>
                             </div>
+                            <div className='field-checkbox col-4 p-2'>
+                                <Checkbox inputId="requireClientSecret"
+                                 name="requireClientSecret"
+                                 checked={formik.values.requireClientSecret}
+                                 onChange={formik.handleChange}></Checkbox>
+                                <label htmlFor="requireClientSecret" className="p-checkbox-label"> Require Client Secret</label>
+                            </div>
                             <div className='col-12 p-2'>
                                 <Button type='submit' label="Save" className="p-button-rounded" />
                             </div>
@@ -216,26 +228,35 @@ export const ManageClient = () => {
 
                 </Card>
             </div>
-            <div className='p-3'>
-                <ClientAllowedScopes clientId={state.clientId} scopeList={state.client.allowedScopes} />
-            </div>
-            <div className='p-3'>
-                <ClientGrantType clientId={state.clientId} grantValue={state.client.allowedGrantType} />
-            </div>
-            <div className='p-3'>
-                <ClientSecretComponent key={state.clientId} clientId={state.clientId} clientSecret={state.client.clientSecrets} />
-            </div>
 
-            <div className='p-3'>
-                <ClientAllowedCorsOrigin clientId={state.clientId} allowedCorsOrigins={state.client.allowedCorsOrigins} />
-            </div>
+            {
+                (state.clientId == 0)? <React.Fragment></React.Fragment> 
+                    : <React.Fragment>
+                        <div className='p-3'>
+                            <ClientAllowedScopes clientId={state.clientId} scopeList={state.client.allowedScopes} />
+                        </div>
+                        <div className='p-3'>
+                            <ClientGrantType clientId={state.clientId} grantValue={state.client.allowedGrantType} />
+                        </div>
+                        {
+                            (state.client.requireClientSecret === false)?<React.Fragment></React.Fragment>:
+                            <div className='p-3'>
+                                <ClientSecretComponent key={state.clientId} clientId={state.clientId} clientSecret={state.client.clientSecrets} />
+                            </div>
+                        }
+                        <div className='p-3'>
+                            <ClientAllowedCorsOrigin clientId={state.clientId} allowedCorsOrigins={state.client.allowedCorsOrigins} />
+                        </div>
 
-            <div className='p-3'>
-                <ClientRedirectUrlComponent key={state.clientId} clientId={state.clientId} redirectUrls={state.client.redirectUris} />
-            </div>
-            <div className='p-3'>
-                <ClientPostLogoutRedirectUrl clientId={state.clientId} postLogoutRedirectUrl={state.client.postLogoutRedirectUris} />
-            </div>
+                        <div className='p-3'>
+                            <ClientRedirectUrlComponent key={state.clientId} clientId={state.clientId} redirectUrls={state.client.redirectUris} />
+                        </div>
+                        <div className='p-3'>
+                            <ClientPostLogoutRedirectUrl clientId={state.clientId} postLogoutRedirectUrl={state.client.postLogoutRedirectUris} />
+                        </div>
+                    </React.Fragment>
+            }
+            
 
         </React.Fragment>
     )

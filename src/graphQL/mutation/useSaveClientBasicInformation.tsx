@@ -17,6 +17,7 @@ interface SaveClientInfoVariable{
         accessTokenLifetime:number;
         requireConsent:boolean;
         requirePkce:boolean;
+        requireClientSecret:boolean;
     }
 }
 

@@ -28,9 +28,13 @@ export const ClientDisplay = () => {
   const leftToolbarTemplate = () => {
     return (
       <div>
-        <Button label="New" icon="pi pi-plus" className="p-button-success mr-2" />
+        <Button label="New" icon="pi pi-plus" className="p-button-success mr-2" onClick={callNewClientPage}/>
       </div>
     )
+  }
+
+  const callNewClientPage = () => {
+    navigate('/operation/client/0');
   }
 
   const callManageClientPage = (clientId: number) => {

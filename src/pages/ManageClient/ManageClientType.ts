@@ -22,4 +22,5 @@ export interface ClientInformationModel{
     accessTokenLifetime:number;
     requireConsent:boolean;
     requirePkce:boolean;
+    requireClientSecret:boolean;
 }

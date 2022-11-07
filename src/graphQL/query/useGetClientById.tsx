@@ -20,6 +20,7 @@ query GetClientInfoById($clientId:Int!){
       accessTokenLifetime
       requireConsent
       requirePkce
+      requireClientSecret
       allowedScopes {
         id
         scope

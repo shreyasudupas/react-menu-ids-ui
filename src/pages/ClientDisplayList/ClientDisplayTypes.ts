@@ -9,6 +9,7 @@ export interface Client{
     accessTokenLifetime:number;
     requireConsent:boolean;
     requirePkce:boolean;
+    requireClientSecret:boolean;
     allowedScopes:AllowedScope[];
     clientSecrets:ClientSecret[];
     allowedCorsOrigins:AllowedCorsOrigin[];
