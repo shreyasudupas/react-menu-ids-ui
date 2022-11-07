@@ -19,6 +19,7 @@ query GetUserInformation($userId:String!){
     cartAmount
     points
     isAdmin
+    imagePath
     claims{
       label
       value

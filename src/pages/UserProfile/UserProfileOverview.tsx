@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { useAuth } from '../../context/useAuth'
 import { Card } from 'primereact/card'
 import { InputText } from 'primereact/inputtext';
@@ -17,7 +17,7 @@ import { useParams } from 'react-router-dom';
 
 const initialState : State = {
     userId: null,
-    userInformation: { id: '', userName: '', email: '', cartAmount: 0, points: 0, address: [], claims: [],isAdmin:false },
+    userInformation: { id: '', userName: '', email: '', cartAmount: 0, points: 0, address: [], claims: [],isAdmin:false,imagePath:'' },
     activeIndex: 0
 }
 
@@ -54,10 +54,20 @@ const UserProfileOverview = () => {
     let user = null;
     const toast = useRef<any>(null);
     const { userId } = useParams();
+    const [ imagePath,setImagePath ] = useState<string>("");
     //console.log("userId from seacrch params"+ userId);
    
     const { loading, error, data } = useUserInformationQuery(state.userId!);
     const [saveUserInfo] = useSaveUserInformationMutation();
+
+    useEffect(()=>{
+        if(data !== undefined){
+            debugger
+            let image = process.env.REACT_APP_SERVER_IMAGE_PATH + data.userInformation.imagePath
+            setImagePath(image);
+        }
+        
+    },[data]);
 
     const showSuccess = () => {
         toast.current.show({severity:'success', summary: 'Success Message', detail:'Saved User', life: 3000});
@@ -137,7 +147,7 @@ const UserProfileOverview = () => {
             <Card title="Welcome to the Content Management Dashboard" subTitle="User Profile">
                 <div className='grid p-fluid'>
                     <div className='col-5'>
-                        <Image src="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png" alt="Image" width="250" preview />
+                        <Image src={imagePath} alt="Image" width="250" preview />
                     </div>
                     <div className='col-7'>
                         <div className='col-12'>
@@ -205,7 +215,7 @@ const UserProfileOverview = () => {
 
                 <div className='grid p-fluid'>
                     <div className='p-col-12 w-full'>
-                        <ImageUpload />
+                        <ImageUpload userId={state.userInformation.id}/>
                     </div>
                 </div>
 

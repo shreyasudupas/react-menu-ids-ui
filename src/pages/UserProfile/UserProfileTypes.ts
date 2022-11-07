@@ -13,6 +13,7 @@ points:number;
 address:any[];
 claims:any[];
 isAdmin:boolean;
+imagePath:string;
 }
 
 export type Action = 
