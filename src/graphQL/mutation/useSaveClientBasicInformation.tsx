@@ -33,6 +33,7 @@ mutation SaveClientBasicInfo($clientBasic:ClientBasicInfoInput!){
       createdDate
       requireConsent
       requirePkce
+      requireClientSecret
     }
   }
 `

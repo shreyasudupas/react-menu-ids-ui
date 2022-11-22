@@ -94,7 +94,7 @@ export const ManageClient = () => {
         onSubmit: (data) => {
             debugger
             // alert(data);
-            let createdDate = moment(data.createdDate).format('DD/MM/YYYY h:mm:ss');
+            let createdDate = moment(data.createdDate).format('MM/DD/YYYY h:mm:ss');
             SaveClientBasic({
                 variables:{
                     clientBasic:{
