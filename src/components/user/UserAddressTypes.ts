@@ -3,6 +3,7 @@ export interface UserAddressState {
     cities: Array<DropdownModel>;
     areas: Array<DropdownModel>;
     listUserAddress: Array<UserAddressModel>;
+    userId:string;
 }
 
 export interface DropdownModel {
@@ -26,8 +27,9 @@ export interface UserAddressModel {
 }
 
 export type UserAddressAction = 
-| { type: 'modify-cities'; userId:number; value:Array<DropdownModel>; }
-| { type: 'modify-area'; userId:number;value:Array<DropdownModel>; }
+| { type: 'modify-cities'; addressId:number; value:Array<DropdownModel>; }
+| { type: 'modify-area'; addressId:number;value:Array<DropdownModel>; }
 | { type: 'add-list-userAddress'; listUserAddress:Array<UserAddressModel>; }
 | { type: 'add-new-address'; newAddress:UserAddressModel; }
-| { type: 'modify-user-address-form'; userId:number; field:string; value:any; }
+| { type: 'modify-user-address-form'; addressId:number; field:string; value:any; }
+| { type: 'modify-userId'; userId:string; }

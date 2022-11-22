@@ -16,12 +16,13 @@ interface UserProfileAddressVariable{
         isActive: boolean,
         myAreas:DropdownModel[],
         myStates:DropdownModel[]
-    }
+    },
+    userId:string;
 }
 
 const ADD_MODIFY_USER_ADDRESS = gql`
-mutation SaveUserAddress($saveAddress:UserProfileAddressInput!){
-    addModifyAddress(userProfileAddress: $saveAddress) {
+mutation SaveUserAddress($userId:String!,$saveAddress:UserProfileAddressInput!){
+    addModifyAddress(userId:$userId,userProfileAddress: $saveAddress) {
       id
       city
     }

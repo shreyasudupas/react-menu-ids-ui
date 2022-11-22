@@ -223,7 +223,7 @@ const UserProfileOverview = () => {
                     <UserClaim userClaims={state.userInformation.claims} />
                 </div>
 
-                <UserAddress getUserAddress={state.userInformation.address} getActiveIndex={state.activeIndex} />
+                <UserAddress getUserAddress={state.userInformation.address} getActiveIndex={state.activeIndex}  userIdentification={state.userId!}/>
 
             </Card>
             </React.Fragment>
