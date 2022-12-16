@@ -77,6 +77,13 @@ export const ApiScopes = () => {
     
     return (
         <Card title="Api Scope List">
+            <div className='grid'>
+                <div className='col-12'>
+                    <p>
+                    The original OAuth 2.0 specification has the concept of scopes, which is just defined as the scope of access that the client requests. Technically speaking, the scope parameter is a list of space delimited values - you need to provide the structure and semantics of it.
+                    </p>
+                </div>
+            </div>
             <Toolbar className="mb-4" left={leftToolbarTemplate} ></Toolbar>
             <DataTable value={apiScopes} header={header} responsiveLayout="scroll">
                 <Column field="id" header="#"></Column>

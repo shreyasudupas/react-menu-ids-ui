@@ -24,6 +24,8 @@ import { UserRole } from '../pages/ManageRole/ManageRole';
 import { ClientDisplay } from '../pages/ClientDisplayList/ClientDisplay';
 import { ManageClient } from '../pages/ManageClient/ManageClient';
 import { Address } from '../pages/Address/Address';
+import { ApiResourcesList } from '../pages/ApiResourcesList/ApiResourcesList';
+import {ManageApiResource} from '../pages/ManageApiResource/ManageApiResource';
 
 function App() {
   
@@ -75,6 +77,8 @@ function App() {
                   <Route path='clients' element={ <ClientDisplay/> } />
                   <Route path='client/:clientId' element={ <ManageClient/> }/>
                   <Route path='address' element={ <Address/> }/>
+                  <Route path='apiResourceList' element={<ApiResourcesList/>}/>
+                  <Route path='apiResourceList/resource/:apiResourceId' element={<ManageApiResource/>}/>
                </Route>
             </Route>
 

@@ -35,6 +35,11 @@ const ProtectedLayout = () => {
                     icon: 'pi pi-fw pi-align-justify',
                     command: () => { navigate('operation/address') }
                 },
+                {
+                    label: 'API Resources List',
+                    icon: 'pi pi-fw pi-align-justify',
+                    command: () => { navigate('operation/apiResourceList') }
+                }
 
             ]
         },
@@ -46,16 +51,6 @@ const ProtectedLayout = () => {
                     label: 'Dashboard',
                     icon: 'pi pi-fw pi-id-card',
                     command: () => { navigate('user') }
-                },
-                {
-                    label: 'New',
-                    icon: 'pi pi-fw pi-user-plus',
-
-                },
-                {
-                    label: 'Delete',
-                    icon: 'pi pi-fw pi-user-minus',
-
                 },
                 {
                     label: 'List',
