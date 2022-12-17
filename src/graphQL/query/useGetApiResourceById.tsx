@@ -22,6 +22,11 @@ query GetAllApiResourcesById($id:Int!){
       allowedAccessTokenSigningAlgorithms
       created
       lastAccessed
+      scopes{
+        id
+        scope
+        apiResourceId
+      }
     }
   }
 `;

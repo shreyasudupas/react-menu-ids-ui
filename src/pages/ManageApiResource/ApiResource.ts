@@ -1,3 +1,5 @@
+import { ApiResourceScope } from "./ApiResourceScope";
+
 export interface ApiResource{
     id:number;
     enabled:boolean;
@@ -10,4 +12,5 @@ export interface ApiResource{
     updated:string|null;
     lastAccessed:string;
     nonEditable:boolean;
+    scopes:ApiResourceScope[];
 }

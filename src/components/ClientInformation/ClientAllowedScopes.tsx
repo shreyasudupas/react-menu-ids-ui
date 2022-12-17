@@ -12,7 +12,7 @@ type AllowedScopeType = {
   clientId:number;
 }
 
-const GETALLOWEDSCOPELIST:string = "https://localhost:5006/api/utility/getAllowedScopes";
+const GETALLOWEDSCOPELIST:string = "https://localhost:5006/api/utility/getAllScopes";
 
 
 const initialState: ClientAllowedScopeState = {
