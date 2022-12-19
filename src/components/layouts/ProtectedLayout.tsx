@@ -16,19 +16,19 @@ const ProtectedLayout = () => {
             icon: 'pi pi-fw pi-pencil',
             items: [
                 {
+                    label: 'Identity Resources List',
+                    icon: 'pi pi-fw pi-align-justify',
+                    command: () => { navigate('operation/identityResourceList') }
+                },
+                {
                     label: 'API Scopes',
                     icon: 'pi pi-fw pi-align-left',
                     command: () => { navigate('operation/apiscope') }
                 },
                 {
-                    label: 'User Roles',
-                    icon: 'pi pi-fw pi-align-right',
-                    command: () => { navigate('operation/roleList') }
-                },
-                {
-                    label: 'Clients List',
-                    icon: 'pi pi-fw pi-align-center',
-                    command: () => { navigate('operation/clients') }
+                    label: 'API Resources List',
+                    icon: 'pi pi-fw pi-align-justify',
+                    command: () => { navigate('operation/apiResourceList') }
                 },
                 {
                     label: 'Address',
@@ -36,11 +36,15 @@ const ProtectedLayout = () => {
                     command: () => { navigate('operation/address') }
                 },
                 {
-                    label: 'API Resources List',
-                    icon: 'pi pi-fw pi-align-justify',
-                    command: () => { navigate('operation/apiResourceList') }
+                    label: 'Clients List',
+                    icon: 'pi pi-fw pi-align-center',
+                    command: () => { navigate('operation/clients') }
+                },
+                {
+                    label: 'User Roles',
+                    icon: 'pi pi-fw pi-align-right',
+                    command: () => { navigate('operation/roleList') }
                 }
-
             ]
         },
         {

@@ -26,6 +26,8 @@ import { ManageClient } from '../pages/ManageClient/ManageClient';
 import { Address } from '../pages/Address/Address';
 import { ApiResourcesList } from '../pages/ApiResourcesList/ApiResourcesList';
 import {ManageApiResource} from '../pages/ManageApiResource/ManageApiResource';
+import { IdentityResourceList } from '../pages/IdenitityResourceList/IdentityResourceList';
+import { IdentityResourceDetail } from '../pages/IdenitityResourceDetail/IdentityResourceDetail';
 
 function App() {
   
@@ -79,6 +81,8 @@ function App() {
                   <Route path='address' element={ <Address/> }/>
                   <Route path='apiResourceList' element={<ApiResourcesList/>}/>
                   <Route path='apiResourceList/resource/:apiResourceId' element={<ManageApiResource/>}/>
+                  <Route path='identityResourceList' element={<IdentityResourceList/>}></Route>
+                  <Route path='identityResourceList/idenityResourceDetail/:identityResourceId' element={<IdentityResourceDetail/>}></Route>
                </Route>
             </Route>
 

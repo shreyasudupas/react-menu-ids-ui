@@ -6,7 +6,7 @@ export const IDENTITY_CONFIG = {
     post_logout_redirect_uri: process.env.REACT_APP_LOGOFF_REDIRECT_URL, // (string): The OIDC post-logout redirect URI.
     audience: "https://menuids.com/authorize", //is there a way to specific the audience when making the jwt
     response_type: "code", //(string, default: 'id_token'): The type of response desired from the OIDC provider.
-    scope: "openid profile ids IdentityServerApi", //(string, default: 'openid'): The scope being requested from the OIDC provider.
+    scope: "openid profile ids.read ids.write IdentityServerApi", //(string, default: 'openid'): The scope being requested from the OIDC provider.
 };
 
 export const METADATA_OIDC = {
