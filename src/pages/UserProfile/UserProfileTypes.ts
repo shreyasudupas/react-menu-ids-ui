@@ -14,6 +14,7 @@ address:any[];
 claims:any[];
 isAdmin:boolean;
 imagePath:string;
+enabled:boolean;
 }
 
 export type Action = 

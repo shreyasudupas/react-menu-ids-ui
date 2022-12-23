@@ -12,6 +12,7 @@ interface SaveUserInfoVariables{
         cartAmount:number;
         points:number;
         isAdmin:boolean;
+        enabled:boolean;
     }
 }
 export const SAVE_USERINFO = gql`

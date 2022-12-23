@@ -10,6 +10,7 @@ export interface IAuthService{
     logout: () => void;
     signoutRedirectCallback: () => Promise<void>;
     userRoleIsAdmin:() => Promise<string>;
+    isUserEnabled:() => Promise<boolean>;
 }
 
 export default class AuthService implements IAuthService {
@@ -124,5 +125,16 @@ export default class AuthService implements IAuthService {
          } );
 
          return role;
+    }
+
+    isUserEnabled = async () => {
+        const user = await this.getUser();
+        let enable = user.profile["enabled"];
+
+        if(enable !== null){
+            return (enable == 'True')?true:false;
+        }else{
+            return false;
+        }
     }
 }

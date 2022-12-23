@@ -81,10 +81,16 @@ const ProtectedLayout = () => {
     //This will give the result once promise will finish giving its result
     useEffect(() => {
         async function checkIfAdmin() {
+            //debugger
             let role = await auth.userRoleIsAdmin()
+            let enabled = await auth.isUserEnabled()
 
             if (role !== "admin") {
-                navigate('/access-denied')
+                navigate('/access-denied');
+            }
+
+            if(enabled === false){
+                navigate('/access-denied');
             }
         }
         checkIfAdmin()

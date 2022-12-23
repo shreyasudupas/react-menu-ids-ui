@@ -17,7 +17,7 @@ import { useParams } from 'react-router-dom';
 
 const initialState : State = {
     userId: null,
-    userInformation: { id: '', userName: '', email: '', cartAmount: 0, points: 0, address: [], claims: [],isAdmin:false,imagePath:'' },
+    userInformation: { id: '', userName: '', email: '', cartAmount: 0, points: 0, address: [], claims: [],isAdmin:false,imagePath:'',enabled:false },
     activeIndex: 0
 }
 
@@ -121,7 +121,8 @@ const UserProfileOverview = () => {
                     email: state.userInformation.email,
                     cartAmount: state.userInformation.cartAmount,
                     points: state.userInformation.points,
-                    isAdmin: state.userInformation.isAdmin
+                    isAdmin: state.userInformation.isAdmin,
+                    enabled: state.userInformation.enabled
                 }
             }
         })
@@ -139,6 +140,7 @@ const UserProfileOverview = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
     //if (uerror) { console.log(error) }
+    console.log(state);
 
     if (state.userInformation !== undefined) {
         return (
@@ -200,11 +202,21 @@ const UserProfileOverview = () => {
                         <div className='col-12'>
                             <div className="field-checkbox">
                                 <Checkbox
-                                    name="active"
-                                    inputId="binary"
-                                    onChange={(e) => handleInput(e)}
+                                    name="isAdmin"
+                                    inputId="isAdmin"
+                                    onChange={(e) =>  dispatch({ type: 'UPDATE-USERINFORMATION', field: e.target.name, value: e.checked })}
                                     checked={state.userInformation.isAdmin}></Checkbox>
-                                <label htmlFor="binary">Admin</label>
+                                <label htmlFor="isAdmin">Admin</label>
+                            </div>
+                        </div>
+                        <div className='col-12'>
+                            <div className="field-checkbox">
+                                <Checkbox
+                                    name="enabled"
+                                    inputId="enabled"
+                                    onChange={(e) => dispatch({ type: 'UPDATE-USERINFORMATION', field: e.target.name, value: e.checked })}
+                                    checked={state.userInformation.enabled}></Checkbox>
+                                <label htmlFor="enabled">Enabled</label>
                             </div>
                         </div>
                     </div>

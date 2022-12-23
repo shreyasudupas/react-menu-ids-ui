@@ -20,6 +20,7 @@ query GetUserInformation($userId:String!){
     points
     isAdmin
     imagePath
+    enabled
     claims{
       label
       value

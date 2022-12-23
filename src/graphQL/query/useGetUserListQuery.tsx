@@ -10,8 +10,9 @@ query GetUserList{
     userList {
       id
       userName
-      email,
+      email
       isAdmin
+      enabled
       createdDate
     }
   }
