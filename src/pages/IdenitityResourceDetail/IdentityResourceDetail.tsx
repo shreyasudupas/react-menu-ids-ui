@@ -44,6 +44,7 @@ export const IdentityResourceDetail = () => {
     const navigate = useNavigate();
 
     useEffect(()=>{
+        //debugger;
         if(identityResourceId !== undefined){
             if(identityResourceId !== "0"){
                 dispatch({ type:'UPDATE_RESOURCE_ID',value: parseInt(identityResourceId) });
@@ -59,11 +60,13 @@ export const IdentityResourceDetail = () => {
     useEffect(()=>{
         //debugger
         if(data !== undefined){
-            if(data !== null){
+            if(data.identityResourceById !== null){
                 dispatch({ type:'UPDATE_RESOURCE_VALUE',item: data.identityResourceById })
             }
         }
     },[data])
+
+    console.log(state);
 
     const identityResourceForm = useFormik<IdentityResource>({
         initialValues:{
