@@ -119,7 +119,8 @@ export const ManageApiResource = () => {
                         enabled: data.enabled,
                         nonEditable: data.nonEditable,
                         showInDiscoveryDocument: data.showInDiscoveryDocument,
-                        updated: data.updated
+                        updated: data.updated,
+                        scopes: data.scopes
                     }
                 }
             }).then((result) => {
