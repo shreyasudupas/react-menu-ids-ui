@@ -1,5 +1,6 @@
 import { gql, useMutation } from '@apollo/client'
 import { ApiResource } from '../../pages/ManageApiResource/ApiResource';
+import { ApiResourceScope } from '../../pages/ManageApiResource/ApiResourceScope';
 
 interface AddApiResourceResponse{
     addApiResource:ApiResource;
@@ -18,6 +19,7 @@ interface AddApiResourceVariable {
         updated: string | null;
         lastAccessed: string;
         nonEditable: boolean;
+        scopes:ApiResourceScope[];
     };
 }
 
@@ -34,6 +36,11 @@ mutation AddApiResource($addModel:ApiResourceModelInput!){
       allowedAccessTokenSigningAlgorithms
       created
       lastAccessed
+      scopes{
+        id
+        scope
+        apiResourceId
+      }
     }
   }
 `
