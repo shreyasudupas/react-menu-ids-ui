@@ -14,10 +14,11 @@ import UserClaim from '../../components/user/UserClaim';
 import { Toast } from 'primereact/toast';
 import UserAddress from '../../components/user/UserAddress';
 import { useParams } from 'react-router-dom';
+import { Dropdown } from 'primereact/dropdown';
 
 const initialState : State = {
     userId: null,
-    userInformation: { id: '', userName: '', email: '', cartAmount: 0, points: 0, address: [], claims: [],isAdmin:false,imagePath:'',enabled:false },
+    userInformation: { id: '', userName: '', email: '', cartAmount: 0, points: 0, address: [], claims: [],userType:'',imagePath:'',enabled:false },
     activeIndex: 0
 }
 
@@ -60,9 +61,15 @@ const UserProfileOverview = () => {
     const { loading, error, data } = useUserInformationQuery(state.userId!);
     const [saveUserInfo] = useSaveUserInformationMutation();
 
+    const userTypesOptions = [
+        { label:'User',value:'User' },
+        { label:'Admin',value:'Admin' },
+        { label:'Vendor',value:'Vendor' },
+    ]
+
     useEffect(()=>{
         if(data !== undefined){
-            debugger
+            //debugger
             let image = process.env.REACT_APP_SERVER_IMAGE_PATH + data.userInformation.imagePath
             setImagePath(image);
         }
@@ -109,6 +116,7 @@ const UserProfileOverview = () => {
 
     const handleInput = (event: any ) => {
         dispatch({ type: 'UPDATE-USERINFORMATION', field: event.target.name, value: event.target.value })
+        //console.log(state.userInformation)
     }
 
     const saveUserInformation = () => {
@@ -121,7 +129,7 @@ const UserProfileOverview = () => {
                     email: state.userInformation.email,
                     cartAmount: state.userInformation.cartAmount,
                     points: state.userInformation.points,
-                    isAdmin: state.userInformation.isAdmin,
+                    userType: state.userInformation.userType,
                     enabled: state.userInformation.enabled
                 }
             }
@@ -200,14 +208,17 @@ const UserProfileOverview = () => {
                             </div>
                         </div>
                         <div className='col-12'>
-                            <div className="field-checkbox">
-                                <Checkbox
-                                    name="isAdmin"
-                                    inputId="isAdmin"
-                                    onChange={(e) =>  dispatch({ type: 'UPDATE-USERINFORMATION', field: e.target.name, value: e.checked })}
-                                    checked={state.userInformation.isAdmin}></Checkbox>
-                                <label htmlFor="isAdmin">Admin</label>
-                            </div>
+                            <span className="field-p-float-label">
+                            <label htmlFor="userType"><h5>User Type</h5></label>
+                                <Dropdown inputId="userType"
+                                          name="userType"
+                                          value={state.userInformation.userType} 
+                                          options={userTypesOptions} 
+                                          onChange={(e) => handleInput(e)} 
+                                          optionValue="value"
+                                          optionLabel="label"
+                                          placeholder="Select a User Type" />
+                            </span>
                         </div>
                         <div className='col-12'>
                             <div className="field-checkbox">

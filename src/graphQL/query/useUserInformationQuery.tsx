@@ -18,7 +18,7 @@ query GetUserInformation($userId:String!){
     email
     cartAmount
     points
-    isAdmin
+    userType
     imagePath
     enabled
     claims{

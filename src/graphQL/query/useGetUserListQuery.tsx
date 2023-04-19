@@ -11,7 +11,7 @@ query GetUserList{
       id
       userName
       email
-      isAdmin
+      userType
       enabled
       createdDate
     }

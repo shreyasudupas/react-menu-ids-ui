@@ -11,7 +11,7 @@ interface SaveUserInfoVariables{
         email:string;
         cartAmount:number;
         points:number;
-        isAdmin:boolean;
+        userType:string;
         enabled:boolean;
     }
 }

@@ -23,12 +23,14 @@ export const UserList = () => {
 
 
     const typeBodyTemplate = (rowData:IUserList) => {
-        if(rowData.isAdmin){
+        if(rowData.userType == "Admin"){
             return  <Badge value="ADMIN" severity="info" className="mr-2"></Badge>
         }
-        else{
+        else if(rowData.userType == "User"){
             return  <Badge value="USER" severity="warning" className="mr-2"></Badge>
         }
+        else
+        return <Badge value="VENDOR" severity="success" className="mr-2"></Badge>
     }
 
     const actionBodyTemplate = (rowData:IUserList) => {
@@ -52,7 +54,7 @@ export const UserList = () => {
               <DataTable value={users} header={header} responsiveLayout="scroll">
                   <Column field="userName" header="Username"></Column>
                   <Column field="email" header="Email"></Column>
-                  <Column field="isAdmin" header="Type" body={typeBodyTemplate}></Column>
+                  <Column field="userType" header="Type" body={typeBodyTemplate}></Column>
                   <Column field="createdDate" header="Created Date"></Column>
                   <Column header="Action" body={actionBodyTemplate}></Column>
               </DataTable>

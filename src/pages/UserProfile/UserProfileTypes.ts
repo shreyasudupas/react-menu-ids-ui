@@ -12,7 +12,7 @@ cartAmount:number;
 points:number;
 address:any[];
 claims:any[];
-isAdmin:boolean;
+userType:string;
 imagePath:string;
 enabled:boolean;
 }
