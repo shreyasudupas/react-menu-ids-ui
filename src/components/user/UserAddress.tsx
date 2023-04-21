@@ -10,6 +10,7 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { useAddModifyUserAddress } from "../../graphQL/mutation/useAddModifyUserAddress"
 import { Toast } from "primereact/toast"
+import { InputText } from "primereact/inputtext"
 
 const initialState : UserAddressState = {
     cities:[],
@@ -102,7 +103,7 @@ const UserAddress = ({getUserAddress,getActiveIndex,userIdentification}:UserAddr
 
     const addNewUserAddress = () =>{
         newActive = true
-        debugger
+        //debugger
         const newUser:UserAddressModel = { 
             id:0,
             fullAddress:'',
@@ -115,7 +116,9 @@ const UserAddress = ({getUserAddress,getActiveIndex,userIdentification}:UserAddr
             isActive:false,
             myCities:null,
             myAreas:null, 
-            myStates: state.listUserAddress[0].myStates
+            myStates: state.listUserAddress[0].myStates,
+            vendorId:'',
+            editable:true
         }
         dispatch({type:'add-new-address',newAddress:newUser})
     }
@@ -202,67 +205,125 @@ const UserAddress = ({getUserAddress,getActiveIndex,userIdentification}:UserAddr
                                     else if ( newActive === true) //for new user newActive will be true so override the active Index
                                         activeIndex = index
 
-                                    return (
-                                        <AccordionTab header={accTabname} key={address.id}>
-                                            <div className='grid'>
-                                                <div className='col-12'>
-                                                    <h5>Full Address</h5>
-                                                    <InputTextarea
-                                                        name="fullAddress"
-                                                        value={address.fullAddress}
-                                                        onChange={(e) => handleInput(e, address.id)}
-                                                        className='w-full'
-                                                        rows={5}
-                                                        cols={30} />
-                                                </div>
-                                                <div className='col-12'>
-                                                    <div className="field-checkbox">
-                                                        <Checkbox inputId="acticeAddress"
-                                                            name="isActive"
+                                        //debugger;
+                                    if(address.editable){
+                                        return (
+                                            <AccordionTab header={accTabname} key={address.id}>
+                                                <div className='grid'>
+                                                    <div className='col-12'>
+                                                        <h5>Full Address</h5>
+                                                        <InputTextarea
+                                                            name="fullAddress"
+                                                            value={address.fullAddress}
                                                             onChange={(e) => handleInput(e, address.id)}
-                                                            checked={address.isActive}></Checkbox>
-                                                        <label htmlFor="acticeAddress">IsActive</label>
+                                                            className='w-full'
+                                                            rows={5}
+                                                            cols={30} />
+                                                    </div>
+                                                    <div className='col-12'>
+                                                        <div className="field-checkbox">
+                                                            <Checkbox inputId="acticeAddress"
+                                                                name="isActive"
+                                                                onChange={(e) => handleInput(e, address.id)}
+                                                                checked={address.isActive}></Checkbox>
+                                                            <label htmlFor="acticeAddress">IsActive</label>
+                                                        </div>
+                                                    </div>
+                                                    <div className='col-12'>
+                                                        <h5>State</h5>
+                                                        <Dropdown
+                                                            name="stateId"
+                                                            value={address.stateId}
+                                                            options={address.myStates}
+                                                            optionValue="value"
+                                                            optionLabel="label"
+                                                            onChange={(e) => handleCitiesInput(e, address.id)}
+                                                        />
+                                                    </div>
+                                                    <div className='col-12'>
+                                                        <h5>City</h5>
+                                                        <Dropdown
+                                                            name="cityId"
+                                                            value={address.cityId}
+                                                            options={address.myCities}
+                                                            optionValue="value"
+                                                            optionLabel="label"
+                                                            onChange={(e) => handleAreasInput(e, address.id)}
+                                                        />
+                                                    </div>
+                                                    <div className='col-12'>
+                                                        <h5>Area</h5>
+                                                        <Dropdown
+                                                            name="areaId"
+                                                            value={address.areaId}
+                                                            options={address.myAreas}
+                                                            optionValue="value"
+                                                            optionLabel="label"
+                                                            onChange={(e) => handleInput(e, address.id)}
+                                                        />
+                                                    </div>
+                                                    <div className='col-12'>
+                                                        <Button label="Save" onClick={() => saveUserAddress(address)} />
                                                     </div>
                                                 </div>
-                                                <div className='col-12'>
-                                                    <h5>State</h5>
-                                                    <Dropdown
-                                                        name="stateId"
-                                                        value={address.stateId}
-                                                        options={address.myStates}
-                                                        optionValue="value"
-                                                        optionLabel="label"
-                                                        onChange={(e) => handleCitiesInput(e, address.id)}
-                                                    />
+                                            </AccordionTab>
+                                        )
+                                    }else{
+                                        return (
+                                            <AccordionTab>
+                                                <div className='formgrid grid'>
+                                                    <div className='col-12'>
+                                                        <h5>Full Address</h5>
+                                                        <InputTextarea
+                                                            name="fullAddress"
+                                                            value={address.fullAddress}
+                                                            onChange={(e) => handleInput(e, address.id)}
+                                                            className='w-full'
+                                                            rows={5}
+                                                            cols={30} 
+                                                            disabled={true}/>
+                                                    </div>
+                                                    <div className='field col-12 p-3'>
+                                                        <div className="field-checkbox">
+                                                            <Checkbox inputId="acticeAddress"
+                                                                name="isActive"
+                                                                checked={address.isActive}
+                                                                onChange={(e) => handleCitiesInput(e, address.id)}
+                                                                disabled={true}></Checkbox>
+                                                            <label htmlFor="acticeAddress">IsActive</label>
+                                                        </div>
+                                                    </div>
+                                                    <div className='field col-12 p-3'>
+                                                        <span className="p-float-label">
+                                                            <InputText id="state"
+                                                                    value={address.state}
+                                                                    onChange={(e) => handleCitiesInput(e, address.id)}
+                                                                    disabled={true}/>
+                                                            <label htmlFor="state">State</label>
+                                                        </span>
+                                                    </div>
+                                                    <div className='field col-12 p-3'>
+                                                        <span className="p-float-label">
+                                                            <InputText id="city" 
+                                                                value={address.city} 
+                                                                onChange={(e) => handleCitiesInput(e, address.id)}
+                                                                disabled={true}/>
+                                                            <label htmlFor="city">City</label>
+                                                        </span>
+                                                    </div>
+                                                    <div className='field col-12 p-3'>
+                                                        <span className="p-float-label">
+                                                            <InputText id="area" 
+                                                            value={address.area} 
+                                                            onChange={(e) => handleCitiesInput(e, address.id)}
+                                                            disabled={true}/>
+                                                            <label htmlFor="area">Area</label>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div className='col-12'>
-                                                    <h5>City</h5>
-                                                    <Dropdown
-                                                        name="cityId"
-                                                        value={address.cityId}
-                                                        options={address.myCities}
-                                                        optionValue="value"
-                                                        optionLabel="label"
-                                                        onChange={(e) => handleAreasInput(e, address.id)}
-                                                    />
-                                                </div>
-                                                <div className='col-12'>
-                                                    <h5>Area</h5>
-                                                    <Dropdown
-                                                        name="areaId"
-                                                        value={address.areaId}
-                                                        options={address.myAreas}
-                                                        optionValue="value"
-                                                        optionLabel="label"
-                                                        onChange={(e) => handleInput(e, address.id)}
-                                                    />
-                                                </div>
-                                                <div className='col-12'>
-                                                    <Button label="Save" onClick={() => saveUserAddress(address)} />
-                                                </div>
-                                            </div>
-                                        </AccordionTab>
-                                    )
+                                            </AccordionTab>
+                                        )
+                                    }
                                 })}
                             </Accordion>
                         </div>

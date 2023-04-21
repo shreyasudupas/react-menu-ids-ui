@@ -49,6 +49,7 @@ query GetUserInformation($userId:String!){
         value
       }
       areaId
+      editable
     }
   }
 }

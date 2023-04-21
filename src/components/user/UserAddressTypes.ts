@@ -24,6 +24,8 @@ export interface UserAddressModel {
     stateId:string;
     myStates: any;
     isActive: boolean;
+    vendorId:string;
+    editable:boolean;
 }
 
 export type UserAddressAction = 
